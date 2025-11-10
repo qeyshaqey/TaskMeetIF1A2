@@ -220,6 +220,7 @@
         .content {
             padding-top: 90px !important;
         }
+
         /* === Tata letak kiri-kanan: tabel & kalender === */
         .row.align-items-start {
             align-items: stretch !important;
@@ -231,67 +232,6 @@
         .col-lg-4 {
             display: flex;
             flex-direction: column;
-        }
-
-        /* Pastikan tabel di kiri dan kalender kanan sejajar */
-        .col-lg-8>.card,
-        .col-lg-4>.calendar-box {
-            flex: 1;
-        }
-
-        /* Responsif di layar kecil: tumpuk vertikal dengan jarak pas */
-        @media (max-width: 992px) {
-            .row.align-items-start {
-                flex-direction: column;
-            }
-
-            .col-lg-8,
-            .col-lg-4 {
-                width: 100%;
-            }
-
-            .col-lg-4 {
-                margin-top: 16px;
-            }
-        }
-
-        /* === Kalender kanan fix responsif & proporsional === */
-        .calendar-box {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box;
-        }
-
-
-        #miniCalendar .flatpickr-days,
-        #miniCalendar .flatpickr-innerContainer {
-            width: 100% !important;
-        }
-
-        #miniCalendar .flatpickr-day {
-            max-width: 36px !important;
-            height: 36px !important;
-            line-height: 36px !important;
-            margin: 2px;
-        }
-
-        /* 📱 Responsif di layar kecil */
-        @media (max-width: 992px) {
-            .calendar-box {
-                margin-top: 16px;
-                padding: 12px;
-                min-height: 320px;
-            }
-
-            #miniCalendar .flatpickr-day {
-                max-width: 30px !important;
-                height: 30px !important;
-                line-height: 30px !important;
-            }
         }
     </style>
 </head>
@@ -336,7 +276,7 @@
         <nav class="nav flex-column">
             <a class="nav-link active" href="dashboard admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
             <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar User</a>
-            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>            
+            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
         </nav>
     </aside>
 
@@ -368,7 +308,7 @@
             </div>
 
             <div class="row g-3">
-                <div class="col-lg-8">
+                <div class="col-lg-15">
                     <div class="card-rail">
                         <h6 class="mb-3">Jadwal Rapat Periode <span id="periodLabel">-</span></h6>
                         <div class="table-responsive">
@@ -376,45 +316,51 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Rapat</th>
+                                        <th>Agenda Rapat</th>
                                         <th>Tanggal Rapat</th>
+                                        <th>Waktu Rapat</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Rapat Koordinasi</td>
+                                        <td>Rapat Koordinasi Divisi HMTI</td>
                                         <td>2025-04-16</td>
+                                        <td>08:00 - 10:00</td>
+                                        <td>SEKARANG</td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
                                         <td>Rapat Evaluasi</td>
                                         <td>2025-04-17</td>
+                                        <td>08:00 - 10:00</td>
+                                        <td>AKAN DATANG</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
                                         <td>Rapat Proyek</td>
                                         <td>2025-04-18</td>
+                                        <td>08:00 - 10:00</td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
                                         <td>Rapat Koordinasi</td>
                                         <td>2025-04-20</td>
+                                        <td>08:00 - 10:00</td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>5</td>
                                         <td>Rapat Evaluasi</td>
                                         <td>2025-04-22</td>
+                                        <td>08:00 - 10:00</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="calendar-box">
-                        <div id="miniCalendar"></div>
                     </div>
                 </div>
             </div>
@@ -461,12 +407,6 @@
                     const label = document.getElementById('periodLabel');
                     label.textContent = dateStr.replace(' to ', ' - ') || '-';
                 }
-            });
-
-            flatpickr("#miniCalendar", {
-                inline: true,
-                monthSelectorType: 'static',
-                defaultDate: new Date(),
             });
 
             document.getElementById('periodLabel').textContent = "15 April - 25 April 2025";
