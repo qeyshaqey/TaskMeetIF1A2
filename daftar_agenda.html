@@ -197,7 +197,7 @@
         <h4>Menu</h4>
         <nav class="nav flex-column">
             <a class="nav-link" href="dashboard admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar User</a>
+            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar Peserta</a>
             <a class="nav-link active" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
         </nav>
     </aside>
@@ -212,10 +212,11 @@
 
                 <div class="d-flex gap-2 align-items-center mt-2 mt-md-0">
                     <select id="filterJenis" class="form-select" style="width:200px;">
-                        <option value="">Semua Jenis Rapat</option>
-                        <option>Rapat Bisnis</option>
-                        <option>Rapat Proyek</option>
-                        <option>Safety Moment</option>
+                        <option value="">Semua Jurusan</option>
+                        <option>Teknik Informatika</option>
+                        <option>Teknik Mesin</option>
+                        <option>Teknik Elektro</option>
+                        <option>Manajemen Bisnis</option>
                     </select>
                 </div>
             </div>
@@ -226,8 +227,8 @@
                         <thead class="table-light text-center">
                             <tr style="vertical-align: middle;">
                                 <th style="width:50px;">No</th>
-                                <th>Nama Agenda Rapat</th>
-                                <th>Jenis Rapat</th>
+                                <th>Judul Rapat</th>
+                                <th>Jurusan</th>
                                 <th>Tanggal</th>
                                 <th>Waktu</th>
                                 <th>Tempat/Platform</th>
@@ -239,16 +240,15 @@
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td>rapat seleksi</td>
-                                <td>Rapat Bisnis</td>
-                                <td>12/01/2025</td>
+                                <td>Rapat PBM</td>
+                                <td>Teknik Informatika</td>
+                                <td>2025-11-10</td>
                                 <td>08:00</td>
                                 <td>TA 10.4</td>
                                 <td>Nabila</td>
                                 <td></td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-outline-primary"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                <td>
+                                    <button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -269,16 +269,17 @@
                 <div class="modal-body">
                     <form id="formTambah">
                         <div class="mb-3">
-                            <label class="form-label">Nama Agenda Rapat</label>
-                            <input type="text" class="form-control" id="namaAgendaInput" required>
+                            <label class="form-label">Judul Rapat</label>
+                            <input type="text" class="form-control" id="judulRapatInput" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Jenis Rapat</label>
-                            <select class="form-select" id="jenisRapatInput" required>
-                                <option value="">Pilih Jenis</option>
-                                <option>Rapat Bisnis</option>
-                                <option>Rapat Proyek</option>
-                                <option>Safety Moment</option>
+                            <label class="form-label">Jurusan</label>
+                            <select class="form-select" id="jurusanInput" required>
+                                <option value="">Pilih Jurusan</option>
+                                <option>Teknik Informatika</option>
+                                <option>Teknik Mesin</option>
+                                <option>Teknik Elektro</option>
+                                <option>Manajemen Bisnis</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -308,18 +309,69 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Peserta</label>
-                            <select class="form-select" id="pesertaInput" multiple required style="height:120px;">
-                                <option>Nabila</option>
-                                <option>Sani</option>
-                                <option>Aisyah</option>
-                                <option>Andi</option>
-                                <option>Della</option>
-                            </select>
+                            <div class="form-control" id="pesertaCheckBoxes">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="selectAllPeserta">
+                                    <label for="selectAllPeserta" class="form-check-label">Pilih Semua / Hapus Semua</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="Qeysha" id="peserta1">
+                                    <label for="peserta1" class="form-check-label">Qeysha</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="Rizka" id="peserta2">
+                                    <label for="peserta2" class="form-check-label">Rizka</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="Nabila" id="peserta3">
+                                    <label for="peserta3" class="form-check-label">Nabila</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="Iqbal" id="peserta4">
+                                    <label for="peserta4" class="form-check-label">Iqbal</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="Nina" id="peserta5">
+                                    <label for="checkbox" class="form-check-label">Nina</label>
+                                </div>
+                            </div>
                         </div>
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--MODAL DETAIL-->
+    <div class="modal fade" id="modalDetail" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">Detail</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Judul Rapat:</strong> <span id="detailJudul"></span></p>
+                    <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
+                    <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
+                    <p><strong>Waktu:</strong> <span id="detailWaktu"></span></p>
+                    <p><strong>Tempat:</strong> <span id="detailTempat"></span></p>
+                    <p><strong>Host:</strong> <span id="detailHost"></span></p>
+
+                    <hr>
+                    <h6 class="fw-semibold">Peserta & Kehadiran:</h6>
+                    <div class="mb-3" id="detailPesertaList"></div>
+
+                    <div class="text-end">
+                        <button class="btn btn-success" id="btnSimpanKehadiran"><i class="fa-solid fa-save me-1"></i> Simpan</button>
+                        <button class="btn btn-primary" id="btnKirimUndangan"><i class="fa-solid fa-paper-plane me-1"></i> Kirim</button>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button class="btn btn-warning" id="btnEditDetail">Edit</button>
+                    <button class="btn btn-danger" id="btnHapusDetail">Hapus</button>
                 </div>
             </div>
         </div>
@@ -353,6 +405,15 @@
                     sidebar.classList.toggle('hide');
                 }
             });
+        $('#selectAllPeserta').on('change', function (){
+            const checked = $(this).is(':checked');
+            $('#pesertaCheckBoxes input[type="checkbox"]').prop('checked', checked);
+        });
+        $('#pesertaCheckBoxes input[type="checkbox"]').not('#selectAllPeserta').on('change', function () {
+            const total = $('#pesertaCheckBoxes input[type="checkbox"]').not('#selectAllPeserta').length;
+            const checked = $('#pesertaCheckBoxes input[type="checkbox"]:checked').not('#selectAllPeserta').length;
+            $('#selectAllPeserta').prop('checked', total === checked);
+        });
 
             const table = $('#agendaTable').DataTable({
                 pageLength: 5,
@@ -380,9 +441,6 @@
                 table.column(2).search(this.value).draw();
             });
 
-            $('#btnTambah').on('click', function () {modalTambah.show();
-            });
-
             $('input[name="tipeTempat"]').on('change', function() {
                 if ($(this).val() === 'online') {
                     $('#zoomLinkInput').removeClass('d-none').attr('required', true);
@@ -395,8 +453,8 @@
 
             $('#formTambah').on('submit', function (e) {
                 e.preventDefault();
-                const namaagendarapat = $('#namaAgendaInput').val();
-                const jenisrapat = $('#jenisRapatInput').val();
+                const judulrapat = $('#judulRapatInput').val();
+                const jurusan = $('#jurusanInput').val();
                 const tanggalrapat = $('#tanggalInput').val();
                 const waktu = $('#waktuInput').val();
                 let tempat = "";
@@ -406,27 +464,86 @@
                     tempat = $('#tempatOfflineInput').val();
                 }
                 const host = $('#hostInput').val();
-                const peserta = $('#pesertaInput').val().map(n => `<span class="badge bg-secondary me-1">${n}</span>`).join('');
-
+                const peserta = $('#pesertaCheckBoxes input:checked')
+                    .not('#selectAllPeserta')
+                    .map(function () { return $(this).val(); })
+                    .get()
+                    .map(n => `<span class="badge bg-secondary me-1">${n}</span>`)
+                    .join('');
 
                 table.row.add([
                     "",
-                    namaagendarapat,
-                    jenisrapat,
+                    judulrapat,
+                    jurusan,
                     tanggalrapat,
                     waktu,
                     tempat,
                     host,
                     peserta,
-                    `<button class="btn btn-sm btn-outline-primary"><i class='fa fa-pen'></i></button>
-           <button class="btn btn-sm btn-outline-danger"><i class='fa fa-trash'></i></button>`
+                    `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
                 ]).draw(false);
 
             $('#modalTambah').modal('hide');
             this.reset();
         });
-    });
-    </script>
+        // Tombol Detail
+        $('#agendaTable tbody').on('click', '.btn-detail', function () {
+            const row = table.row($(this).closest('tr')).data();
+            $('#detailJudul').text(row[1]);
+            $('#detailJurusan').text(row[2]);
+            $('#detailTanggal').text(row[3]);
+            $('#detailWaktu').text(row[4]);
+            $('#detailTempat').html(row[5]);
+            $('#detailHost').text(row[6]);
+            $('#detailPeserta').html(row[7]);
 
+            // Buat daftar peserta dengan opsi hadir/tidak hadir
+            const pesertaHTML = $(row[7]).map(function () {
+                const nama = $(this).text();
+                return `
+                    <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                        <span class="fw-semibold">${nama}</span>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-hadir" type="radio" name="status_${nama}" value="Hadir">
+                            <label class="form-check-label">Hadir</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-hadir" type="radio" name="status_${nama}" value="Tidak Hadir">
+                            <label class="form-check-label">Tidak Hadir</label>
+                        </div>
+                    </div>
+                `;
+            }).get().join('');
+
+            $('#detailPesertaList').html(pesertaHTML);
+            window.selectedRow = table.row($(this).closest('tr'));
+            $('#modalDetail').modal('show');
+        });
+
+        // Simpan status kehadiran (contoh simpan ke row data)
+        $('#btnSimpanKehadiran').on('click', function () {
+            const hasil = [];
+            $('#detailPesertaList .d-flex').each(function () {
+                const nama = $(this).find('span').text();
+                const status = $(this).find('input[type="radio"]:checked').val() || '-';
+                hasil.push(`<span class="badge bg-${status === 'Hadir' ? 'success' : status === 'Tidak Hadir' ? 'danger' : 'secondary'} me-1">${nama}: ${status}</span>`);
+            });
+
+            // Update kolom peserta di tabel
+            window.selectedRow.data()[7] = hasil.join('');
+            window.selectedRow.invalidate().draw(false);
+
+            alert('Status kehadiran berhasil disimpan!');
+            $('#modalDetail').modal('hide');
+        });
+
+        // Tombol Kirim Undangan
+        $('#btnKirimUndangan').on('click', function () {
+            alert('Undangan rapat berhasil dikirim ke peserta!');
+        });
+
+    });
+    
+    </script>
 </body>
 </html>
