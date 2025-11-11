@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard - IF1A2 TASK MEET</title>
 
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-    <!-- DataTables CSS -->
+    <!-- DataTables -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-
-    <!-- Flatpickr CSS -->
+    <!-- Flatpickr -->
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" rel="stylesheet" />
 
@@ -29,22 +26,22 @@
         body {
             background: #f4f7fb;
             margin: 0;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
         }
 
         .navbar {
             background: linear-gradient(90deg, var(--blue-1), var(--blue-2));
-            z-index: 1100 !important;
+            z-index: 1100;
             position: fixed;
             top: 0;
             width: 100%;
         }
 
         .toggle-floating {
-            position: fixed !important;
+            position: fixed;
             top: 14px;
             left: 14px;
-            z-index: 5000 !important;
+            z-index: 5000;
             background: #ffffff;
             border-radius: 50%;
             width: 46px;
@@ -56,21 +53,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar-brand {
-            margin-left: 70px;
-        }
-
-        .navbar-brand img {
-            height: 55px;
-            width: auto;
-        }
-
-        @media (max-width: 992px) {
-            .navbar-brand {
-                margin-left: 80px;
-            }
-        }
-
         .sidebar {
             width: var(--sidebar-w);
             height: 100vh;
@@ -80,23 +62,11 @@
             padding: 72px 14px 20px 14px;
             background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
             color: #fff;
-            overflow-y: auto;
             transition: left .28s ease;
-            box-shadow: 2px 0 12px rgba(0, 0, 0, .06);
-            z-index: 900 !important;
         }
 
         .sidebar.hide {
             left: -260px;
-        }
-
-        .sidebar h4 {
-            color: #fff;
-            font-weight: 700;
-            margin: 20px 8px 18px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
         }
 
         .sidebar .nav-link {
@@ -109,16 +79,9 @@
             gap: 10px;
         }
 
-        .sidebar .nav-link i {
-            width: 24px;
-            text-align: center;
-        }
-
         .sidebar .nav-link:hover,
         .sidebar .nav-link.active {
             background: rgba(255, 255, 255, .14);
-            color: #fff;
-            transform: translateX(6px);
         }
 
         .content {
@@ -151,100 +114,36 @@
             padding: 18px;
             box-shadow: 0 6px 18px rgba(18, 38, 63, .06);
         }
-
-        .table thead th {
-            background: #e9eef7;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                left: -260px;
-                padding-top: 70px;
-                width: 260px;
-                z-index: 900 !important;
-            }
-
-            .sidebar.show {
-                left: 0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 90px;
-            }
-        }
-
-        .row.align-items-start {
-            align-items: stretch !important;
-            gap: 20px;
-        }
-
-        .col-lg-8,
-        .col-lg-4 {
-            display: flex;
-            flex-direction: column;
-        }
     </style>
 </head>
 
 <body>
-
-    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container-fluid d-flex align-items-center">
             <button class="toggle-floating" id="btnToggleFloating" title="Toggle menu">
                 <i class="fas fa-bars"></i>
             </button>
-
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="logo.png" alt="logo" class="brand-logo">
-                <span class="text-white fw-semibold fs-5">IF1A2 TASK MEET</span>
+            <a class="navbar-brand d-flex align-items-center ms-5" href="#">
+                <img src="logo.png" alt="logo" style="height:50px; width:auto;">
+                <span class="text-white fw-semibold fs-5 ms-2">IF1A2 TASK MEET</span>
             </a>
-
-            <div class="ms-auto d-flex align-items-center">
-                <div class="dropdown">
-                    <a class="text-white dropdown-toggle d-flex align-items-center" href="#" id="userMenu"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle fa-lg"></i>
-                        <span id="usernameDisplay" class="d-none d-md-inline ms-2 text-white"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                        <li><a class="dropdown-item" href="profile_admin.html">Profil Saya</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="landing.html">Keluar</a></li>
-                    </ul>
-                </div>
-            </div>
         </div>
     </nav>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <div class="overlay" id="overlay"></div>
         <h4>Menu</h4>
         <nav class="nav flex-column">
-            <a class="nav-link active" href="dashboard admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a class="nav-link" href="daftar_pengguna.html"><i class="fas fa-box"></i>Daftar Pengguna</a>
-            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
+            <a class="nav-link active" href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a class="nav-link" href="#"><i class="fas fa-users"></i> Daftar Pengguna</a>
+            <a class="nav-link" href="#"><i class="fas fa-calendar"></i> Agenda Rapat</a>
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="content">
         <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 id="welcomeText" class="mb-0">Selamat Datang</h3>
-            </div>
+            <h3 class="mb-3">Selamat Datang Admin</h3>
 
-            <div class="d-flex gap-3 align-items-center filter-bar">
-                <button class="btn btn-outline-light border" id="btnDateLabel" style="background:#fff; color:#333;">
-                    <i class="far fa-calendar-alt me-2"></i> Tanggal Rapat
-                </button>
-
-                <input id="datePicker" class="form-control" style="width:240px;" placeholder="Pilih tanggal" readonly>
-
+            <div class="filter-bar">
                 <select id="jenisRapat" class="form-select" style="width:200px;">
                     <option value="">Semua Jurusan</option>
                     <option>Teknik Informatika</option>
@@ -252,63 +151,70 @@
                     <option>Teknik Elektro</option>
                     <option>Manajemen Bisnis</option>
                 </select>
+
+                <input id="datePicker" class="form-control" style="width:200px;" placeholder="Pilih tanggal" readonly>
             </div>
 
-            <div class="row g-3">
-                <div class="col-lg-15">
-                    <div class="card-rail">
-                        <h6 class="mb-3">Jadwal Rapat Tanggal <span id="periodLabel">-</span></h6>
-                        <div class="table-responsive">
-                            <table id="jadwalTable" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Judul Rapat</th>
-                                        <th>Jurusan</th>
-                                        <th>Program Studi</th>
-                                        <th>Tanggal Rapat</th>
-                                        <th>Waktu Rapat</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Rapat Koordinasi</td>
-                                        <td>Teknik Informatika</td>
-                                        <td>Teknik Rekayasa Multimedia</td>
-                                        <td>2025-04-16</td>
-                                        <td>08:00 - 10:00</td>
-                                        <td>SEKARANG</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Rapat Evaluasi</td>
-                                        <td>Teknik Informatika</td>
-                                        <td>Teknik Rekayasa Perangkat Lunak</td>
-                                        <td>2025-04-17</td>
-                                        <td>08:00 - 10:00</td>
-                                        <td>AKAN DATANG</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Rapat HMTI Fair</td>
-                                        <td>Teknik Informatika</td>
-                                        <td>Teknik Informatika</td>
-                                        <td>2025-10-20</td>
-                                        <td>17:00 - 20:00</td>
-                                        <td>AKAN DATANG</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+            <div class="card-rail">
+                <h6 class="mb-3">Jadwal Rapat</h6>
+                <div class="table-responsive">
+                    <table id="jadwalTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Judul Rapat</th>
+                                <th>Jurusan</th>
+                                <th>Program Studi</th>
+                                <th>Tanggal Rapat</th>
+                                <th>Waktu Rapat</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Rapat Koordinasi</td>
+                                <td>Teknik Informatika</td>
+                                <td>Rekayasa Multimedia</td>
+                                <td>2025-04-16</td>
+                                <td>08:00 - 10:00</td>
+                                <td>SEKARANG</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Rapat Evaluasi</td>
+                                <td>Teknik Informatika</td>
+                                <td>Rekayasa Perangkat Lunak</td>
+                                <td>2025-04-17</td>
+                                <td>08:00 - 10:00</td>
+                                <td>AKAN DATANG</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Rapat Bengkel</td>
+                                <td>Teknik Mesin</td>
+                                <td>Teknik Otomotif</td>
+                                <td>2025-10-22</td>
+                                <td>13:00 - 15:00</td>
+                                <td>AKAN DATANG</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Rapat Keuangan</td>
+                                <td>Manajemen Bisnis</td>
+                                <td>Manajemen Pemasaran</td>
+                                <td>2025-09-10</td>
+                                <td>09:00 - 11:00</td>
+                                <td>SELESAI</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Bootstrap JS -->
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -316,59 +222,37 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        (function () {
+        $(document).ready(function () {
+            const table = $('#jadwalTable').DataTable({
+                pageLength: 5,
+                lengthChange: false,
+                searching: true,
+                ordering: false
+            });
+
+            // === FILTER JURUSAN ===
+            $('#jenisRapat').on('change', function () {
+                const jurusan = $(this).val();
+                table.column(2).search(jurusan).draw(); // kolom 3 = jurusan
+            });
+
+            // === FILTER TANGGAL ===
+            flatpickr("#datePicker", {
+                dateFormat: "Y-m-d",
+                onChange: function (selectedDates, dateStr) {
+                    table.column(4).search(dateStr).draw(); // kolom 5 = tanggal
+                }
+            });
+
+            // === TOGGLE SIDEBAR ===
             const sidebar = document.getElementById('sidebar');
             const btnToggle = document.getElementById('btnToggleFloating');
-            const welcomeText = document.getElementById('welcomeText');
-            const usernameDisplay = document.getElementById('usernameDisplay');
-
-            // Simulasi ambil username dari query string atau localStorage
-            const params = new URLSearchParams(window.location.search);
-            const user = params.get('user') || localStorage.getItem('username') || 'guest';
-
-            usernameDisplay.textContent = user;
-            localStorage.setItem('username', user);
-
-            // Jika admin, tampilkan pesan khusus
-            if (user.toLowerCase() === 'admin') {
-                welcomeText.textContent = 'Selamat Datang Admin';
-            } else {
-                welcomeText.textContent = 'Selamat Datang ' + user.charAt(0).toUpperCase() + user.slice(1);
-            }
-
             btnToggle.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.toggle('show');
-                } else {
-                    sidebar.classList.toggle('hide');
-                }
+                if (window.innerWidth < 992) sidebar.classList.toggle('show');
+                else sidebar.classList.toggle('hide');
             });
-
-            $(document).ready(function () {
-                $('#jadwalTable').DataTable({
-                    pageLength: 5,
-                    lengthChange: false,
-                    searching: true,
-                    ordering: false
-                });
-            });
-
-            // Single date picker (bukan rentang)
-            flatpickr("#datePicker", {
-                dateFormat: "d/m/Y",
-                onChange: function (selectedDates, dateStr) {
-                    document.getElementById('periodLabel').textContent = dateStr || '-';
-                }
-            });
-
-            document.addEventListener('click', function (e) {
-                if (!sidebar.contains(e.target) && !btnToggle.contains(e.target)) {
-                    if (window.innerWidth < 992) sidebar.classList.remove('show');
-                }
-            });
-        })();
+        });
     </script>
-
 </body>
 
 </html>
