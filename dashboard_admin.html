@@ -220,7 +220,6 @@
         .content {
             padding-top: 90px !important;
         }
-
         /* === Tata letak kiri-kanan: tabel & kalender === */
         .row.align-items-start {
             align-items: stretch !important;
@@ -275,8 +274,8 @@
         <h4>Menu</h4>
         <nav class="nav flex-column">
             <a class="nav-link active" href="dashboard admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar User</a>
-            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
+            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i>Daftar Peserta</a>
+            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>            
         </nav>
     </aside>
 
@@ -296,10 +295,11 @@
                     readonly>
 
                 <select id="jenisRapat" class="form-select" style="width:200px;">
-                    <option value="">Semua Jenis Rapat</option>
-                    <option>Rapat Koordinasi</option>
-                    <option>Rapat Evaluasi</option>
-                    <option>Rapat Proyek</option>
+                    <option value="">Semua Jurusan</option>
+                    <option>Teknik Informatika</option>
+                    <option>Teknik Mesin</option>
+                    <option>Teknik Elektro</option>
+                    <option>Manajemen Bisnis</option>
                 </select>
 
                 <div class="ms-auto">
@@ -316,7 +316,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Agenda Rapat</th>
+                                        <th>Judul Rapat</th>
+                                        <th>Jurusan</th>
+                                        <th>Program Studi</th>
                                         <th>Tanggal Rapat</th>
                                         <th>Waktu Rapat</th>
                                         <th>Status</th>
@@ -325,7 +327,9 @@
                                 <tbody>
                                     <tr>
                                         <td>1</td>
-                                        <td>Rapat Koordinasi Divisi HMTI</td>
+                                        <td>Rapat Koordinasi</td>
+                                        <td>Teknik Informatika</td>
+                                        <td>Teknik Rekayasa Multimedia</td>
                                         <td>2025-04-16</td>
                                         <td>08:00 - 10:00</td>
                                         <td>SEKARANG</td>
@@ -333,29 +337,37 @@
                                     <tr>
                                         <td>2</td>
                                         <td>Rapat Evaluasi</td>
+                                        <td>Teknik Informatika</td>
+                                        <td>Teknik Rekayasa Perangkat Lunak</td>
                                         <td>2025-04-17</td>
                                         <td>08:00 - 10:00</td>
                                         <td>AKAN DATANG</td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
-                                        <td>Rapat Proyek</td>
-                                        <td>2025-04-18</td>
-                                        <td>08:00 - 10:00</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
-                                        <td>Rapat Koordinasi</td>
-                                        <td>2025-04-20</td>
-                                        <td>08:00 - 10:00</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                     <tr>
                                         <td>5</td>
-                                        <td>Rapat Evaluasi</td>
-                                        <td>2025-04-22</td>
-                                        <td>08:00 - 10:00</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                         <td></td>
                                     </tr>
                                 </tbody>
