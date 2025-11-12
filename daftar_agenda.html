@@ -435,120 +435,133 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            const sidebar = document.getElementById('sidebar');
-            const btnToggle = document.getElementById('btnToggleFloating');
+    $(document).ready(function () {
+        // === SIDEBAR TOGGLE ===
+        const sidebar = document.getElementById('sidebar');
+        const btnToggle = document.getElementById('btnToggleFloating');
+        btnToggle.addEventListener('click', () => {
+            if (window.innerWidth < 992) {
+                sidebar.classList.toggle('show');
+            } else {
+                sidebar.classList.toggle('hide');
+            }
+        });
 
-            btnToggle.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.toggle('show');
-                } else {
-                    sidebar.classList.toggle('hide');
-                }
-            });
-        $('#selectAllPeserta').on('change', function (){
+        // === CHECKBOX PESERTA ===
+        $('#selectAllPeserta').on('change', function () {
             const checked = $(this).is(':checked');
             $('#pesertaCheckBoxes input[type="checkbox"]').prop('checked', checked);
         });
+
         $('#pesertaCheckBoxes input[type="checkbox"]').not('#selectAllPeserta').on('change', function () {
             const total = $('#pesertaCheckBoxes input[type="checkbox"]').not('#selectAllPeserta').length;
             const checked = $('#pesertaCheckBoxes input[type="checkbox"]:checked').not('#selectAllPeserta').length;
             $('#selectAllPeserta').prop('checked', total === checked);
         });
 
-            const table = $('#agendaTable').DataTable({
-                pageLength: 5,
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
-                columnDefs: [
-            {
-                targets: 0, // kolom nomor
-                searchable: false,
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    // Nomor otomatis berdasarkan urutan baris
-                    return meta.row + meta.settings._iDisplayStart + 1;
+        // === DATATABLES ===
+        const table = $('#agendaTable').DataTable({
+            pageLength: 5,
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
+            order: [],
+            columnDefs: [
+                {
+                    targets: 0,
+                    searchable: false,
+                    orderable: false,
+                    render: function (data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
                 }
+            ]
+        });
+
+        // === Nomor Otomatis Update ===
+        table.on('order.dt search.dt draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' })
+                .nodes()
+                .each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+        });
+
+        // === TAMBAH DATA ===
+        $('#formTambah').on('submit', function (e) {
+            e.preventDefault();
+
+            const judulrapat = $('#judulRapatInput').val();
+            const jurusan = $('#jurusanInput').val();
+            const tanggalrapat = $('#tanggalInput').val();
+            const waktu = $('#waktuInput').val();
+            const host = $('#hostInput').val();
+            let tempat = "";
+
+            if ($('input[name="tipeTempat"]:checked').val() === "online") {
+                const link = $('#zoomLinkInput').val();
+                tempat = `<a href="${link}" target="_blank" class="text-primary text-decoration-underline">Zoom Meeting</a>`;
+            } else {
+                tempat = $('#tempatOfflineInput').val();
             }
-        ]
-            });
+            const peserta = $('#pesertaCheckBoxes input:checked')
+                .not('#selectAllPeserta')
+                .map(function () {
+                    return $(this).val();
+                })
+                .get()
+                .map(n => `<span class="badge bg-secondary me-1">${n}</span>`)
+                .join('');
 
-
-            $('#searchBox').on('keyup', function () {
-                table.search(this.value).draw();
-            });
-
-            $('#filterJenis').on('change', function () {
-                table.column(2).search(this.value).draw();
-            });
-
-            $('input[name="tipeTempat"]').on('change', function() {
-                if ($(this).val() === 'online') {
-                    $('#zoomLinkInput').removeClass('d-none').attr('required', true);
-                    $('#tempatOfflineInput').addClass('d-none').removeAttr('required');
-                } else {
-                    $('#tempatOfflineInput').removeClass('d-none').attr('required', true);
-                    $('#zoomLinkInput').addClass('d-none').removeAttr('required');
-                }
-            });
-
-            $('#formTambah').on('submit', function (e) {
-                e.preventDefault();
-                const judulrapat = $('#judulRapatInput').val();
-                const jurusan = $('#jurusanInput').val();
-                const tanggalrapat = $('#tanggalInput').val();
-                const waktu = $('#waktuInput').val();
-                let tempat = "";
-                if ($('input[name="tipeTempat"]:checked').val() === "online") {
-                    const link = $('#zoomLinkInput').val();tempat = `<a href="${link}" target="_blank" class="text-primary text-decoration-underline">Zoom Meeting</a>`;
-                } else {
-                    tempat = $('#tempatOfflineInput').val();
-                }
-                const host = $('#hostInput').val();
-                const peserta = $('#pesertaCheckBoxes input:checked')
-                    .not('#selectAllPeserta')
-                    .map(function () { return $(this).val(); })
-                    .get()
-                    .map(n => `<span class="badge bg-secondary me-1">${n}</span>`)
-                    .join('');
-
-                table.row.add([
-                    "",
-                    judulrapat,
-                    jurusan,
-                    tanggalrapat,
-                    waktu,
-                    tempat,
-                    host,
-                    peserta,
-                    `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
-                ]).draw(false);
+            table.row.add([
+                null,
+                judulrapat,
+                jurusan,
+                tanggalrapat,
+                waktu,
+                tempat,
+                host,
+                peserta,
+                `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
+            ]).draw(false);
 
             $('#modalTambah').modal('hide');
             this.reset();
         });
-        // ====== DETAIL (lihat saja) ======
+
+        // === DETAIL ===
         $('#agendaTable tbody').on('click', '.btn-detail', function () {
-            const row = table.row($(this).closest('tr')).data();
-            window.selectedRow = table.row($(this).closest('tr'));
+            const $tr = $(this).closest('tr');
+            window.selectedRow = table.row($tr);
 
-            $('#detailJudul').text(row[1]);
-            $('#detailJurusan').text(row[2]);
-            $('#detailTanggal').text(row[3]);
-            $('#detailWaktu').text(row[4]);
-            $('#detailTempat').html(row[5]);
-            $('#detailHost').text(row[6]);
+            const data = window.selectedRow.data();
+            $('#detailJudul').text(data[1]);
+            $('#detailJurusan').text(data[2]);
+            $('#detailTanggal').text(data[3]);
+            $('#detailWaktu').text(data[4]);
+            $('#detailTempat').html(data[5]);
+            $('#detailHost').text(data[6]);
 
-            // Tampilkan peserta dalam bentuk list
-            const peserta = $('<div>').html(row[7]).find('span').map(function () {
+            const pesertaList = $('<div>').html(data[7]).find('span').map(function () {
                 return `<li class="list-group-item">${$(this).text()}</li>`;
             }).get().join('');
-            $('#detailPesertaList').html(peserta);
-
+            $('#detailPesertaList').html(pesertaList);
             $('#modalDetail').modal('show');
         });
 
-        // ====== EDIT (ubah semua + absen) ======
+        // === HAPUS BARIS ===
+        $('#btnHapusDetail').on('click', function () {
+            if (!window.selectedRow) {
+                alert('Silakan pilih baris yang ingin dihapus terlebih dahulu.');
+                return;
+            }
+            if (!confirm('Yakin ingin menghapus agenda ini?')) return;
+
+            window.selectedRow.remove().draw(false);
+            window.selectedRow = null;
+            $('#modalDetail').modal('hide');
+        });
+
+        // === EDIT DATA ===
         $('#btnEditDetail').on('click', function () {
             const data = window.selectedRow.data();
 
@@ -559,34 +572,30 @@
             $('#editTempat').val($(data[5]).text() || data[5]);
             $('#editHost').val(data[6]);
 
-            // Buat daftar peserta dalam bentuk list
             const pesertaHTML = $('<div>').html(data[7]).find('span').map(function () {
-                const teks = $(this).text(); // "Nama: Hadir" atau "Nama: Tidak Hadir"
-                const parts = teks.split(':');
-                const nama = parts[0].trim();
-                const status = parts[1] ? parts[1].trim() : '-';
+                const nama = $(this).text().split(':')[0].trim();
                 return `
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span class="fw-semibold">${nama}</span>
                         <div>
                             <label class="me-2">
-                                <input type="radio" name="status_${nama}" value="Hadir" ${status === 'Hadir' ? 'checked' : ''}> Hadir
+                                <input type="radio" name="status_${nama}" value="Hadir"> Hadir
                             </label>
                             <label>
-                                <input type="radio" name="status_${nama}" value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'checked' : ''}> Tidak Hadir
+                                <input type="radio" name="status_${nama}" value="Tidak Hadir"> Tidak Hadir
                             </label>
                         </div>
                     </li>`;
             }).get().join('');
 
             $('#editPesertaList').html(pesertaHTML);
-
             $('#modalDetail').modal('hide');
             $('#modalEdit').modal('show');
         });
 
-        // ====== SIMPAN PERUBAHAN ======
+        // === SIMPAN EDIT ===
         $('#btnSimpanEdit').on('click', function () {
+            if (!window.selectedRow) return;
             const hasilPeserta = $('#editPesertaList li').map(function () {
                 const nama = $(this).find('span').text();
                 const status = $(this).find('input[type="radio"]:checked').val() || '-';
@@ -595,7 +604,7 @@
             }).get().join('');
 
             window.selectedRow.data([
-                "",
+                null,
                 $('#editJudul').val(),
                 $('#editJurusan').val(),
                 $('#editTanggal').val(),
@@ -610,11 +619,11 @@
             alert('Perubahan berhasil disimpan!');
         });
 
-        // ====== KIRIM UNDANGAN ======
+        // === KIRIM UNDANGAN ===
         $('#btnKirimEdit').on('click', function () {
             alert('Undangan rapat berhasil dikirim ke semua peserta!');
         });
-        
+
     });
 
     </script>
