@@ -344,38 +344,79 @@
             </div>
         </div>
     </div>
-    <!--MODAL DETAIL-->
+    <!-- MODAL DETAIL -->
     <div class="modal fade" id="modalDetail" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title">Detail</h5>
-                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Judul Rapat:</strong> <span id="detailJudul"></span></p>
-                    <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
-                    <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
-                    <p><strong>Waktu:</strong> <span id="detailWaktu"></span></p>
-                    <p><strong>Tempat:</strong> <span id="detailTempat"></span></p>
-                    <p><strong>Host:</strong> <span id="detailHost"></span></p>
-
-                    <hr>
-                    <h6 class="fw-semibold">Peserta & Kehadiran:</h6>
-                    <div class="mb-3" id="detailPesertaList"></div>
-
-                    <div class="text-end">
-                        <button class="btn btn-success" id="btnSimpanKehadiran"><i class="fa-solid fa-save me-1"></i> Simpan</button>
-                        <button class="btn btn-primary" id="btnKirimUndangan"><i class="fa-solid fa-paper-plane me-1"></i> Kirim</button>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button class="btn btn-warning" id="btnEditDetail">Edit</button>
-                    <button class="btn btn-danger" id="btnHapusDetail">Hapus</button>
-                </div>
-            </div>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+            <h5 class="modal-title">Detail Agenda Rapat</h5>
+            <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Judul Rapat:</strong> <span id="detailJudul"></span></p>
+            <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
+            <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
+            <p><strong>Waktu:</strong> <span id="detailWaktu"></span></p>
+            <p><strong>Tempat:</strong> <span id="detailTempat"></span></p>
+            <p><strong>Host:</strong> <span id="detailHost"></span></p>
+            <hr>
+            <h6 class="fw-semibold">Peserta:</h6>
+            <ul id="detailPesertaList" class="list-group mb-3"></ul>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button class="btn btn-warning" id="btnEditDetail"><i class="fa fa-pen me-1"></i> Edit</button>
+            <button class="btn btn-danger" id="btnHapusDetail"><i class="fa fa-trash me-1"></i> Hapus</button>
+        </div>
         </div>
     </div>
+    </div>
+        <!-- MODAL EDIT -->
+        <div class="modal fade" id="modalEdit" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title">Edit Agenda Rapat</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEdit">
+                <div class="mb-3">
+                    <label class="form-label">Judul Rapat</label>
+                    <input type="text" class="form-control" id="editJudul">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Jurusan</label>
+                    <input type="text" class="form-control" id="editJurusan">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" class="form-control" id="editTanggal">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Waktu</label>
+                    <input type="time" class="form-control" id="editWaktu">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tempat</label>
+                    <input type="text" class="form-control" id="editTempat">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Host</label>
+                    <input type="text" class="form-control" id="editHost">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Peserta & Kehadiran</label>
+                    <ul id="editPesertaList" class="list-group"></ul>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button class="btn btn-success" id="btnSimpanEdit"><i class="fa fa-save me-1"></i> Simpan</button>
+                <button class="btn btn-primary" id="btnKirimEdit"><i class="fa fa-paper-plane me-1"></i> Kirim</button>
+            </div>
+            </div>
+        </div>
+        </div>
 
     <!-- JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -486,64 +527,96 @@
             $('#modalTambah').modal('hide');
             this.reset();
         });
-        // Tombol Detail
+        // ====== DETAIL (lihat saja) ======
         $('#agendaTable tbody').on('click', '.btn-detail', function () {
             const row = table.row($(this).closest('tr')).data();
+            window.selectedRow = table.row($(this).closest('tr'));
+
             $('#detailJudul').text(row[1]);
             $('#detailJurusan').text(row[2]);
             $('#detailTanggal').text(row[3]);
             $('#detailWaktu').text(row[4]);
             $('#detailTempat').html(row[5]);
             $('#detailHost').text(row[6]);
-            $('#detailPeserta').html(row[7]);
 
-            // Buat daftar peserta dengan opsi hadir/tidak hadir
-            const pesertaHTML = $(row[7]).map(function () {
-                const nama = $(this).text();
-                return `
-                    <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
-                        <span class="fw-semibold">${nama}</span>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input status-hadir" type="radio" name="status_${nama}" value="Hadir">
-                            <label class="form-check-label">Hadir</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input status-hadir" type="radio" name="status_${nama}" value="Tidak Hadir">
-                            <label class="form-check-label">Tidak Hadir</label>
-                        </div>
-                    </div>
-                `;
+            // Tampilkan peserta dalam bentuk list
+            const peserta = $('<div>').html(row[7]).find('span').map(function () {
+                return `<li class="list-group-item">${$(this).text()}</li>`;
             }).get().join('');
+            $('#detailPesertaList').html(peserta);
 
-            $('#detailPesertaList').html(pesertaHTML);
-            window.selectedRow = table.row($(this).closest('tr'));
             $('#modalDetail').modal('show');
         });
 
-        // Simpan status kehadiran (contoh simpan ke row data)
-        $('#btnSimpanKehadiran').on('click', function () {
-            const hasil = [];
-            $('#detailPesertaList .d-flex').each(function () {
+        // ====== EDIT (ubah semua + absen) ======
+        $('#btnEditDetail').on('click', function () {
+            const data = window.selectedRow.data();
+
+            $('#editJudul').val(data[1]);
+            $('#editJurusan').val(data[2]);
+            $('#editTanggal').val(data[3]);
+            $('#editWaktu').val(data[4]);
+            $('#editTempat').val($(data[5]).text() || data[5]);
+            $('#editHost').val(data[6]);
+
+            // Buat daftar peserta dalam bentuk list
+            const pesertaHTML = $('<div>').html(data[7]).find('span').map(function () {
+                const teks = $(this).text(); // "Nama: Hadir" atau "Nama: Tidak Hadir"
+                const parts = teks.split(':');
+                const nama = parts[0].trim();
+                const status = parts[1] ? parts[1].trim() : '-';
+                return `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">${nama}</span>
+                        <div>
+                            <label class="me-2">
+                                <input type="radio" name="status_${nama}" value="Hadir" ${status === 'Hadir' ? 'checked' : ''}> Hadir
+                            </label>
+                            <label>
+                                <input type="radio" name="status_${nama}" value="Tidak Hadir" ${status === 'Tidak Hadir' ? 'checked' : ''}> Tidak Hadir
+                            </label>
+                        </div>
+                    </li>`;
+            }).get().join('');
+
+            $('#editPesertaList').html(pesertaHTML);
+
+            $('#modalDetail').modal('hide');
+            $('#modalEdit').modal('show');
+        });
+
+        // ====== SIMPAN PERUBAHAN ======
+        $('#btnSimpanEdit').on('click', function () {
+            const hasilPeserta = $('#editPesertaList li').map(function () {
                 const nama = $(this).find('span').text();
                 const status = $(this).find('input[type="radio"]:checked').val() || '-';
-                hasil.push(`<span class="badge bg-${status === 'Hadir' ? 'success' : status === 'Tidak Hadir' ? 'danger' : 'secondary'} me-1">${nama}: ${status}</span>`);
-            });
+                const badgeClass = status === 'Hadir' ? 'success' : status === 'Tidak Hadir' ? 'danger' : 'secondary';
+                return `<span class="badge bg-${badgeClass} me-1">${nama}: ${status}</span>`;
+            }).get().join('');
 
-            // Update kolom peserta di tabel
-            window.selectedRow.data()[7] = hasil.join('');
-            window.selectedRow.invalidate().draw(false);
+            window.selectedRow.data([
+                "",
+                $('#editJudul').val(),
+                $('#editJurusan').val(),
+                $('#editTanggal').val(),
+                $('#editWaktu').val(),
+                $('#editTempat').val(),
+                $('#editHost').val(),
+                hasilPeserta,
+                `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
+            ]).draw(false);
 
-            alert('Status kehadiran berhasil disimpan!');
-            $('#modalDetail').modal('hide');
+            $('#modalEdit').modal('hide');
+            alert('Perubahan berhasil disimpan!');
         });
 
-        // Tombol Kirim Undangan
-        $('#btnKirimUndangan').on('click', function () {
-            alert('Undangan rapat berhasil dikirim ke peserta!');
+        // ====== KIRIM UNDANGAN ======
+        $('#btnKirimEdit').on('click', function () {
+            alert('Undangan rapat berhasil dikirim ke semua peserta!');
         });
-
+        
     });
-    
+
     </script>
 </body>
 </html>
