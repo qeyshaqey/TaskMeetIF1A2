@@ -1,443 +1,499 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="id">
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Profil Pengguna</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Profile - IF1A2 TaskMeet</title>
+
+    <!-- Bootstrap CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
         :root {
-            --sidebar-w: 250px;
-            --blue-1: #784B84;
-            --blue-2: #D7BFDC;
+            --sidebar-w: 240px;
+            --primary: #2E5BFF;
+            --purple-top: #784B84;
+            --purple-bottom: #D7BFDC;
         }
 
+        html,
         body {
-            background: #f4f7fb;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
             height: 100%;
-            overflow-x: hidden;
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, var(--purple-top), var(--purple-bottom));
         }
 
-        /* === NAVBAR === */
-        .navbar {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-2));
-            z-index: 1000 !important;
-            position: fixed;
-            width: 100%;
-            top: 0;
-        }
-
-        .toggle-floating {
-            position: fixed !important;
-            top: 14px;
-            left: 14px;
-            z-index: 5000 !important;
-            background: #ffffff;
-            border-radius: 50%;
-            width: 46px;
-            height: 46px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--blue-1);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: none;
-        }
-
-        .navbar-brand {
-            margin-left: 70px;
-        }
-
-        .navbar-brand img {
-            height: 55px;
-            width: auto;
-        }
-
-        /* === SIDEBAR === */
+        /* SIDEBAR */
         .sidebar {
             width: var(--sidebar-w);
-            height: 100vh;
             position: fixed;
-            top: 0;
             left: 0;
-            padding: 72px 14px 20px 14px;
-            background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+            top: 0;
+            bottom: 0;
+            padding: 28px 18px;
             color: #fff;
-            overflow-y: auto;
+            background: linear-gradient(180deg, rgba(120, 75, 132, 0.98), rgba(215, 191, 220, 0.95));
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
             transition: left .28s ease;
-            box-shadow: 2px 0 12px rgba(0, 0, 0, .06);
-            z-index: 900 !important;
         }
 
-        .sidebar.hide {
-            left: -260px;
+        .sidebar .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
         }
 
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, .95);
+        .sidebar .brand img {
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
             border-radius: 8px;
-            padding: 10px 12px;
-            margin: 6px 6px;
+        }
+
+        .sidebar h5 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 8px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            transition: background .18s, transform .12s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        .sidebar .signout {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 12px;
+            padding: 12px 18px;
+        }
+
+        /* MAIN */
+        .main {
+            margin-left: var(--sidebar-w);
+            padding: 34px 40px;
+            transition: margin-left .28s ease;
+            min-height: 100vh;
+        }
+
+        /* PROFILE HEADER */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 26px;
+            color: #241a2a;
+        }
+
+        .profile-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* PROFILE CARD */
+        .profile-card {
+            width: 100%;
+            max-width: 1100px;
+            background: #fff;
+            margin: 0 auto;
+            border-radius: 18px;
+            padding: 46px 40px;
+            box-shadow: 0 10px 36px rgba(14, 20, 30, 0.08);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 40px;
+            position: relative;
+            overflow: visible;
         }
 
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: rgba(255, 255, 255, .14);
-            color: #fff;
-            transform: translateX(6px);
-        }
-
-        /* === CONTENT === */
-        .content {
-            margin-left: var(--sidebar-w);
-            margin-top: 90px;
-            padding: 20px;
-            min-height: calc(100vh - 90px);
-            transition: margin-left .28s ease;
-        }
-
-        .sidebar.hide+.content {
-            margin-left: 0;
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                left: -260px;
-                padding-top: 70px;
-                width: 260px;
-            }
-
-            .sidebar.show {
-                left: 0;
-            }
-        }
-
-        /* === TITLE PROFILE KIRI === */
-        .profile-title {
-            font-weight: 500;
-            color: black;
-            font-size: 2rem;
-            letter-spacing: 1px;
-            margin: 5px 0 20px 0;
-            align-self: flex-start;
-            margin-left: 60px;
-        }
-
-        @media (max-width: 768px) {
-            .profile-title {
-                text-align: center;
-                align-self: center;
-                margin-left: 0;
-            }
-        }
-
-
-        /* === CARD PROFIL === */
-        .card {
-            border-radius: 20px;
-            border: none;
-            background: #fff;
-            width: 100%;
-            max-width: 1000px;
-            margin: auto;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .profile-left {
+            width: 260px;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
         }
 
         .profile-img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
+            border: 4px solid var(--purple-top);
             object-fit: cover;
-            border: 4px solid #184eff;
-            margin-bottom: 15px;
-            transition: 0.3s;
+            display: block;
+            background: #f2f4f8;
+            box-shadow: 0 8px 20px rgba(46, 91, 255, 0.08);
         }
 
-        .profile-img:hover {
-            transform: scale(1.05);
+        .profile-img-label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: -8px;
         }
 
-        .profile-info {
-            font-size: 1rem;
-            text-align: left;
+        /* right side = info */
+        .profile-body {
+            flex: 1;
         }
 
-        .profile-info strong {
-            width: 100px;
-            display: inline-block;
-            color: #6c757d;
+        .profile-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: #222;
         }
 
-        .btn-success {
-            border-radius: 8px;
+        .profile-meta {
+            color: #444;
+            margin-bottom: 18px;
         }
 
-        /* === TOAST === */
-        .toast {
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+        .profile-meta p {
+            margin: 6px 0;
+            font-weight: 600;
+            color: #2b2b2b;
         }
 
-        .toast.show {
-            opacity: 1 !important;
+        .profile-meta small {
+            color: #666;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .actions {
+            margin-top: 18px;
+        }
+
+        .btn-primary.custom {
+            background: #9348c6;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+        }
+
+        .btn-primary.custom:hover {
+            background: #b05aea;
+        }
+
+        /* small screens */
+        @media (max-width: 992px) {
+            .main {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .sidebar {
+                left: -260px;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .profile-card {
+                flex-direction: column;
+                gap: 16px;
+                padding: 30px;
+            }
+
+            .profile-left {
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                gap: 14px;
+            }
+
+            .profile-body {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .btn-outline-purple {
+            color: #6f42c1 !important;
+            border-color: #6f42c1 !important;
+        }
+
+        .btn-outline-purple:hover {
+            background-color: #6f42c1 !important;
+            color: white !important;
+        }
+
+        .center {
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid d-flex align-items-center">
-            <button class="toggle-floating" id="btnToggleFloating" title="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="logo.png" alt="logo">
-                <span class="text-white fw-semibold fs-5">IF1A2 TASK MEET</span>
-            </a>
-
-            <div class="ms-auto d-flex align-items-center">
-                <div class="dropdown">
-                    <a class="text-white dropdown-toggle d-flex align-items-center" href="#" id="userMenu"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle fa-lg"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                        <li><a class="dropdown-item" href="profile.html">Profil Saya</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="login.html">Keluar</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <h4>Menu</h4>
-        <nav class="nav flex-column">
-            <a class="nav-link" href="dashboard admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar User</a>
-            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
+        <div class="brand">
+            <img src="logo.png" alt="logo">
+            <h5>IF1A2 TaskMeet</h5>
+        </div>
+
+        <nav class="nav-links mt-3">
+            <a href="#"><i class="bi bi-house-door me-2"></i> Dashboard</a>
+            <a href="#"><i class="bi bi-people me-2"></i> Daftar Rapat</a>
+            <a href="#"><i class="bi bi-clock-history me-2"></i> Riwayat Rapat</a>
+            <a href="#"><i class="bi bi-gear me-2"></i> Pengaturan</a>
         </nav>
+
+        <div class="signout">
+            <a href="landing.html" class="d-flex align-items-center text-decoration-none text-white">
+                <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+            </a>
+        </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
-    <main class="content d-flex flex-column align-items-center justify-content-start">
-        <h4 class="profile-title">Profile</h4>
+    <!-- MOBILE TOGGLE -->
+    <button id="toggleBtn" class="btn d-lg-none"
+        style="position:fixed; top:14px; left:14px; z-index:1100; background:#fff; border-radius:10px;">
+        <i class="bi bi-list" style="font-size:1.1rem; color:var(--purple-top)"></i>
+    </button>
 
-        <div class="card p-4 p-md-5 text-center">
-            <img src="https://via.placeholder.com/150" alt="Foto Profil" class="profile-img mx-auto">
-            <h4 id="profileName" class="fw-semibold text-dark mb-4">Rizka</h4>
-
-            <div class="profile-info mx-auto" style="max-width: 400px;">
-                <p><strong>NIM:</strong> <span id="profileNim" class="fw-semibold text-dark">3312501005</span></p>
-                <p><strong>Email:</strong> <span id="profileEmail" class="fw-semibold text-dark">rizka@gmail.com</span>
-                </p>
-            </div>
-
-            <div class="mt-4">
-                <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#editProfileModal">
-                    <i class="fa-solid fa-pen-to-square me-2"></i>Edit Profil
-                </button>
-            </div>
+    <!-- MAIN -->
+    <main class="main" id="main">
+        <div class="profile-header">
+            <h1>Profile</h1>
         </div>
+
+        <section class="profile-card" role="region" aria-label="User profile">
+            <div class="profile-left">
+                <img src="https://via.placeholder.com/300x300.png?text=Foto+Profil" alt="Foto Profil"
+                    class="profile-img" id="profileImage">
+            </div>
+
+            <div class="profile-body">
+                <div class="d-flex justify-content-between align-items-start flex-column flex-md-row">
+                    <div>
+                        <h2 class="profile-name" id="profileName">Rizka</h2>
+                        <div class="profile-meta" id="profileMeta">
+                            <p><small>NIM:</small> <span id="profileNim">3312501005</span></p>
+                            <p><small>Email:</small> <span id="profileEmail">rizka@gmail.com</span></p>
+                        </div>
+                    </div>
+
+                    <div class="actions mt-2 mt-md-0">
+                        <button class="btn btn-primary custom" data-bs-toggle="modal"
+                            data-bs-target="#editProfileModal">
+                            <i class="bi bi-pencil-square me-1"></i> Edit Profil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Modal Edit Profil -->
+
+    <!-- EDIT PROFILE MODAL -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-lg">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="editProfileLabel">
-                        <i class="bi bi-person-lines-fill me-2"></i>Edit Profil Pengguna
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-3">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="editProfileLabel"><i class="bi bi-person-lines-fill me-2"></i>Edit
+                        Profil</h5>
+                    <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <div class="modal-body px-5 py-3">
-                    <form id="editProfileForm">
-                        <div class="mb-3">
-                            <label for="editPhoto" class="form-label fw-semibold">Foto Profil</label>
-                            <input type="file" class="form-control" id="editPhoto">
-                        </div>
+                <div class="modal-body">
+                    <form id="editProfileForm" novalidate>
+                        <div class="row gx-3">
+                            <div class="col-md-4 text-center">
+                                <img id="previewImg" src="https://via.placeholder.com/300x300.png?text=Foto+Profil"
+                                    class="profile-img" alt="Preview foto">
+                                <div class="mt-2">
+                                    <label for="editPhoto" class="form-label">Ubah Foto</label>
+                                    <input class="form-control" type="file" id="editPhoto" accept="image/*">
+                                </div>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="editName" class="form-label fw-semibold">Nama</label>
-                            <input type="text" class="form-control" id="editName" placeholder="Masukkan nama anda">
-                        </div>
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="editName" class="form-label">Nama</label>
+                                    <input id="editName" class="form-control" placeholder="Masukkan nama">
+                                </div>
 
-                        <div class="mb-3">
-                            <label for="editNim" class="form-label fw-semibold">NIM</label>
-                            <input type="text" class="form-control" id="editNim" placeholder="Masukkan NIM anda">
-                        </div>
+                                <div class="mb-3">
+                                    <label for="editNim" class="form-label">NIM</label>
+                                    <input id="editNim" class="form-control" placeholder="Masukkan NIM">
+                                </div>
 
-                        <div class="mb-3">
-                            <label for="editEmail" class="form-label fw-semibold">Email</label>
-                            <input type="email" class="form-control" id="editEmail" placeholder="Masukkan email anda">
-                        </div>
+                                <div class="mb-3">
+                                    <label for="editEmail" class="form-label">Email</label>
+                                    <input id="editEmail" class="form-control" placeholder="Masukkan email"
+                                        type="email">
+                                </div>
 
-                        <hr>
-                        <h6 class="fw-semibold text-secondary mb-3">Ubah Password (Opsional)</h6>
+                                <hr>
 
-                        <div class="mb-3">
-                            <label class="form-label">Password Saat Ini</label>
-                            <input type="password" class="form-control bg-warning-subtle"
-                                placeholder="Masukkan password lama">
-                        </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Password Saat Ini</label>
+                                    <input class="form-control" type="password" placeholder="Masukkan password lama">
+                                </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Password Baru</label>
-                            <input type="password" class="form-control"
-                                placeholder="Kosongkan jika tidak ingin ganti password">
-                        </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Password Baru</label>
+                                    <input class="form-control" type="password"
+                                        placeholder="Kosongkan jika tidak ingin ganti password">
+                                </div>
 
-                        <div class="mb-4">
-                            <label class="form-label">Konfirmasi Password Baru</label>
-                            <input type="password" class="form-control" placeholder="Ulangi password baru">
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline-secondary"
-                                data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" id="saveProfileBtn" class="btn btn-success">
-                                <i class="bi bi-check-circle me-1"></i> Simpan Perubahan Profil
-                            </button>
+                                <div class="d-flex justify-content-end gap-2 mt-2">
+                                    <button class="btn btn-outline-purple" type="button"
+                                        data-bs-dismiss="modal">Batal</button>
+                                    <button class="btn text-white" style="background-color:#6f42c1;" id="saveProfileBtn"
+                                        type="submit">
+                                        <i class="bi bi-check2-circle me-1"></i> Simpan
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // === Toggle Sidebar ===
+        // --- Sidebar toggle (mobile) ---
         const sidebar = document.getElementById('sidebar');
-        const btnToggle = document.getElementById('btnToggleFloating');
-        btnToggle.addEventListener('click', () => {
-            if (window.innerWidth < 992) {
-                sidebar.classList.toggle('show');
-            } else {
-                sidebar.classList.toggle('hide');
-            }
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
         });
 
-        // === Fungsi Menyimpan ke localStorage ===
-        function saveProfileToLocalStorage(profile) {
-            localStorage.setItem('userProfile', JSON.stringify(profile));
+        // --- DOM references ---
+        const profileImage = document.getElementById('profileImage'); // main image in card
+        const profileName = document.getElementById('profileName');
+        const profileNim = document.getElementById('profileNim');
+        const profileEmail = document.getElementById('profileEmail');
+
+        const editForm = document.getElementById('editProfileForm');
+        const editPhoto = document.getElementById('editPhoto');
+        const previewImg = document.getElementById('previewImg');
+        const editName = document.getElementById('editName');
+        const editNim = document.getElementById('editNim');
+        const editEmail = document.getElementById('editEmail');
+
+        // --- Load profile from localStorage ---
+        function loadProfile() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('userProfile') || 'null');
+                if (!saved) return;
+                profileName.textContent = saved.name || profileName.textContent;
+                profileNim.textContent = saved.nim || profileNim.textContent;
+                profileEmail.textContent = saved.email || profileEmail.textContent;
+                if (saved.photo) {
+                    profileImage.src = saved.photo;
+                    previewImg.src = saved.photo;
+                }
+            } catch (e) { console.warn('loadProfile error', e); }
         }
 
-        // === Fungsi Memuat dari localStorage ===
-        function loadProfileFromLocalStorage() {
-            const savedProfile = JSON.parse(localStorage.getItem('userProfile'));
-            if (savedProfile) {
-                document.getElementById('profileName').textContent = savedProfile.name || '';
-                document.getElementById('profileNim').textContent = savedProfile.nim || '';
-                document.getElementById('profileEmail').textContent = savedProfile.email || '';
-                if (savedProfile.photo) {
-                    document.querySelector('.profile-img').src = savedProfile.photo;
-                }
-            }
-        }
+        // --- Preview selected file immediately ---
+        editPhoto.addEventListener('change', function (ev) {
+            const file = ev.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            loadProfileFromLocalStorage();
+        // --- When modal opens, populate inputs with current values ---
+        const editModalEl = document.getElementById('editProfileModal');
+        editModalEl.addEventListener('show.bs.modal', () => {
+            // populate form with current values
+            editName.value = profileName.textContent.trim();
+            editNim.value = profileNim.textContent.trim();
+            editEmail.value = profileEmail.textContent.trim();
+            // preview is already set from profileImage.src
+            previewImg.src = profileImage.src;
+            editPhoto.value = ""; // reset file input
+        });
 
-            const form = document.getElementById('editProfileForm');
-            const modalEl = document.getElementById('editProfileModal');
-            const modal = new bootstrap.Modal(modalEl);
+        // --- Save form ---
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const newName = editName.value.trim() || profileName.textContent.trim();
+            const newNim = editNim.value.trim() || profileNim.textContent.trim();
+            const newEmail = editEmail.value.trim() || profileEmail.textContent.trim();
 
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
+            const file = editPhoto.files[0];
 
-                // Ambil data lama dari localStorage
-                const oldProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
-
-                const newName = document.getElementById('editName').value.trim() || oldProfile.name || '';
-                const newNim = document.getElementById('editNim').value.trim() || oldProfile.nim || '';
-                const newEmail = document.getElementById('editEmail').value.trim() || oldProfile.email || '';
-                const newPhoto = document.getElementById('editPhoto').files[0];
-
-                // Jika foto diubah
-                if (newPhoto) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        const newPhotoData = e.target.result;
-
-                        const updatedProfile = {
-                            name: newName,
-                            nim: newNim,
-                            email: newEmail,
-                            photo: newPhotoData
-                        };
-
-                        // Update tampilan
-                        updateProfileDisplay(updatedProfile);
-                        saveProfileToLocalStorage(updatedProfile);
-                        showToast("Foto profil berhasil diperbarui!");
-                    };
-                    reader.readAsDataURL(newPhoto);
-                } else {
-                    // Jika tidak ada foto baru
-                    const updatedProfile = {
-                        name: newName,
-                        nim: newNim,
-                        email: newEmail,
-                        photo: oldProfile.photo || document.querySelector('.profile-img').src
-                    };
-
-                    updateProfileDisplay(updatedProfile);
-                    saveProfileToLocalStorage(updatedProfile);
-                    showToast("Profil berhasil diperbarui!");
-                }
-
+            function persistAndApply(photoData) {
+                const updated = {
+                    name: newName,
+                    nim: newNim,
+                    email: newEmail,
+                    photo: photoData || profileImage.src
+                };
+                // save
+                localStorage.setItem('userProfile', JSON.stringify(updated));
+                // apply to UI
+                profileName.textContent = updated.name;
+                profileNim.textContent = updated.nim;
+                profileEmail.textContent = updated.email;
+                profileImage.src = updated.photo;
+                previewImg.src = updated.photo;
+                // close modal
+                const modal = bootstrap.Modal.getInstance(editModalEl);
                 modal.hide();
-            });
+                // toast
+                showToast('Profil berhasil diperbarui!');
+            }
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => persistAndApply(ev.target.result);
+                reader.readAsDataURL(file);
+            } else {
+                persistAndApply(null);
+            }
         });
 
-        // === Fungsi Update Tampilan Profil ===
-        function updateProfileDisplay(profile) {
-            document.getElementById('profileName').textContent = profile.name;
-            document.getElementById('profileNim').textContent = profile.nim;
-            document.getElementById('profileEmail').textContent = profile.email;
-            document.querySelector('.profile-img').src = profile.photo;
-        }
-
-        // === Fungsi Toast ===
+        // --- Toast helper ---
         function showToast(message) {
-            document.querySelectorAll('.toast').forEach(t => t.remove());
-            const toast = document.createElement('div');
-            toast.className = 'toast align-items-center text-bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3';
-            toast.setAttribute('role', 'alert');
-            toast.innerHTML = `
-            <div class="d-flex">
-                <div class="toast-body text-center">
-                    <i class="fas fa-check-circle me-2"></i> ${message}
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-            </div>`;
-            document.body.appendChild(toast);
-            const bsToast = new bootstrap.Toast(toast, { delay: 3000 });
-            bsToast.show();
+            // remove old
+            document.querySelectorAll('.toast').forEach(n => n.remove());
+            const t = document.createElement('div');
+            t.className = 'toast align-items-center text-bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3';
+            t.setAttribute('role', 'alert');
+            t.innerHTML = `<div class="d-flex"><div class="toast-body text-center">${message}</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+            document.body.appendChild(t);
+            new bootstrap.Toast(t, { delay: 2500 }).show();
         }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', loadProfile);
     </script>
-
-
-
 </body>
 
 </html>
