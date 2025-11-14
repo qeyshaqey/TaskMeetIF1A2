@@ -224,22 +224,20 @@
         </div>
     </nav>
 
-    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <h4>Menu</h4>
         <nav class="nav flex-column">
             <a class="nav-link" href="dashboard_admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a class="nav-link" href="daftar_user.html"><i class="fas fa-box"></i> Daftar User</a>
-            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
+            <a class="nav-link" href="Daftar_pserta.html"><i class="fas fa-box"></i> Daftar Peserta</a>
+            <a class="nav-link" href="daftar_agenda.html"><i class="fas fa-users"></i> Agenda Rapat</a>
         </nav>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="content d-flex flex-column align-items-center justify-content-start">
         <h4 class="profile-title">Profile</h4>
 
         <div class="card p-4 p-md-5 text-center">
-            <img src="https://via.placeholder.com/150" alt="Foto Profil" class="profile-img mx-auto">
+            <img src="img/image.png" alt="Foto Profil" class="profile-img mx-auto">
             <h4 id="profileName" class="fw-semibold text-dark mb-4">Rizka</h4>
 
             <div class="profile-info mx-auto" style="max-width: 400px;">
@@ -256,7 +254,6 @@
         </div>
     </main>
 
-    <!-- Modal Edit Profil -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-lg">
@@ -280,7 +277,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="editNim" class="form-label fw-semibold">NIM</label>
+                            <label for="editNim" class="form-label fw-semibold">NIK</label>
                             <input type="text" class="form-control" id="editNim" placeholder="Masukkan NIM anda">
                         </div>
 
@@ -325,9 +322,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // === Toggle Sidebar ===
         const sidebar = document.getElementById('sidebar');
         const btnToggle = document.getElementById('btnToggleFloating');
+
         btnToggle.addEventListener('click', () => {
             if (window.innerWidth < 992) {
                 sidebar.classList.toggle('show');
@@ -336,12 +333,25 @@
             }
         });
 
-        // === Fungsi Menyimpan ke localStorage ===
+        // === DEFAULT PROFILE (baru ditambahkan) ===
+        function initDefaultProfile() {
+            const savedProfile = localStorage.getItem('userProfile');
+            if (!savedProfile) {
+                const defaultProfile = {
+                    name: "Rizka",
+                    nim: "3312501005",
+                    email: "rizka@gmail.com",
+                    photo: "img/image.png"
+                };
+
+                localStorage.setItem('userProfile', JSON.stringify(defaultProfile));
+            }
+        }
+
         function saveProfileToLocalStorage(profile) {
             localStorage.setItem('userProfile', JSON.stringify(profile));
         }
 
-        // === Fungsi Memuat dari localStorage ===
         function loadProfileFromLocalStorage() {
             const savedProfile = JSON.parse(localStorage.getItem('userProfile'));
             if (savedProfile) {
@@ -355,6 +365,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+
+            // --- INISIALISASI DATA DEFAULT ---
+            initDefaultProfile();
             loadProfileFromLocalStorage();
 
             const form = document.getElementById('editProfileForm');
@@ -364,7 +377,6 @@
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                // Ambil data lama dari localStorage
                 const oldProfile = JSON.parse(localStorage.getItem('userProfile')) || {};
 
                 const newName = document.getElementById('editName').value.trim() || oldProfile.name || '';
@@ -372,7 +384,6 @@
                 const newEmail = document.getElementById('editEmail').value.trim() || oldProfile.email || '';
                 const newPhoto = document.getElementById('editPhoto').files[0];
 
-                // Jika foto diubah
                 if (newPhoto) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
@@ -385,14 +396,12 @@
                             photo: newPhotoData
                         };
 
-                        // Update tampilan
                         updateProfileDisplay(updatedProfile);
                         saveProfileToLocalStorage(updatedProfile);
                         showToast("Foto profil berhasil diperbarui!");
                     };
                     reader.readAsDataURL(newPhoto);
                 } else {
-                    // Jika tidak ada foto baru
                     const updatedProfile = {
                         name: newName,
                         nim: newNim,
@@ -409,7 +418,6 @@
             });
         });
 
-        // === Fungsi Update Tampilan Profil ===
         function updateProfileDisplay(profile) {
             document.getElementById('profileName').textContent = profile.name;
             document.getElementById('profileNim').textContent = profile.nim;
@@ -417,7 +425,6 @@
             document.querySelector('.profile-img').src = profile.photo;
         }
 
-        // === Fungsi Toast ===
         function showToast(message) {
             document.querySelectorAll('.toast').forEach(t => t.remove());
             const toast = document.createElement('div');
@@ -435,8 +442,6 @@
             bsToast.show();
         }
     </script>
-
-
 
 </body>
 
