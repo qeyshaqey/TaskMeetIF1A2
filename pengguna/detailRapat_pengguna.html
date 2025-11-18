@@ -95,15 +95,15 @@
   <!-- Sidebar -->
   <div class="sidebar" id="sidebar">
     <div class="text-center mb-4">
-      <img src="logo.png" width="110" class="rounded-circle mb-2">
+      <img src="format_gambar/logo.png" width="110" class="rounded-circle mb-2">
       <h5>IF1A2 TaskMeet</h5>
     </div>
 
     <a href="dashboard_pengguna.html"><i class="bi bi-house-door me-2"></i> Dashboard</a>
     <a href="daftarrapat_pengguna.html"><i class="bi bi-calendar me-2"></i> Daftar Rapat</a>
     <a href="riwayatRapat_pengguna.html"><i class="bi bi-clock-history me-2"></i> Riwayat Rapat</a>
-    <a href="detailRapat_pengguna.html"><i class="bi bi-clock-history me-2"></i> Detail Rapat</a>
-    <a href="pengaturan_pengguna.html"><i class="bi bi-person-circle me-2"></i> Profil</a>
+    <a href="detailRapat_pengguna.html"><i class="bi bi-file-text me-2"></i>Detail Kehadiran</a>
+    <a href="profil_pengguna.html"><i class="bi bi-person-circle me-2"></i> Profil</a>
 
     <div class="position-absolute bottom-0 w-100">
       <a href="landing.html"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a>
@@ -151,8 +151,10 @@
             <table class="table table-bordered bg-white table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th>Nama Rapat</th>
+                        <th>No.</th>
+                        <th>Judul Rapat</th>
                         <th>Tanggal</th>
+                        <th>Waktu</th>
                         <th>Tempat</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -160,23 +162,28 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td>1</td>
                         <td>Rapat Koordinasi Mingguan</td>
                         <td>12 Nov 2025</td>
+                        <td>20:00</td>
                         <td>TA 10.7</td>
                         <td><span class="badge bg-success">Hadir</span></td>
                         <td><button class="btn btn-sm btn-outline-primary btn-detail" data-lokasi="">Detail</button></td>
                     </tr>
                     <tr>
+                        <td>2</td>
                         <td>Evaluasi Project A</td>
                         <td>10 Nov 2025</td>
+                        <td>12:00</td>
                         <td>GU 704</td>
                         <td><span class="badge bg-danger">Tidak Hadir</span></td>
                         <td><button class="btn btn-sm btn-outline-primary btn-detail" detailTempat>Detail</button></td>
                     </tr>
-
                     <tr>
+                      <td>3</td>
                         <td>Pembagian Tugas</td>
                         <td>3 Nov 2025</td>
+                        <td>13:00</td>
                         <td>Zoom Meeting</td>
                         <td><span class="badge bg-danger">Tidak Hadir</span></td>
                         <td><button class="btn btn-sm btn-outline-primary btn-detail" data-lokasi="">Detail</button></td>
@@ -197,15 +204,18 @@
 
       <div class="modal-body">
         <div class="mb-2">
-          <small class="text-muted">Nama Rapat</small>
-          <div id="detailNamaRapat" class="fw-semibold"></div>
+          <small class="text-muted">Judul Rapat</small>
+          <div id="detailJudulRapat" class="fw-semibold"></div>
         </div>
 
         <div class="mb-2">
           <small class="text-muted">Tanggal</small>
           <div id="detailTanggal"></div>
         </div>
-
+        <div class="mb-2">
+          <small class="text-muted">Waktu</small>
+          <div id="detailWaktu"></div>
+        </div>
         <div class="mb-2">
           <small class="text-muted">Tempat / Link Rapat</small>
           <div id="detailTempat"></div>
@@ -221,58 +231,59 @@
 </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('toggleBtn').onclick = () => {
+  document.getElementById('toggleBtn').onclick = () => {
     document.getElementById('sidebar').classList.toggle('active');
-    }
-    function showDetailKehadiran(nama, tanggal, tempat, status) {
-    document.getElementById("detailNamaRapat").innerText = nama;
+  }
+
+  function showDetailKehadiran(judul, tanggal, waktu, tempat,  status) {
+    document.getElementById("detailJudulRapat").innerText = judul;
     document.getElementById("detailTanggal").innerText = tanggal;
+    document.getElementById("detailWaktu").innerText = waktu;
     document.getElementById("detailTempat").innerHTML = tempat;
     document.getElementById("detailStatus").innerHTML = status;
 
     var modal = new bootstrap.Modal(document.getElementById('detailKehadiranModal'));
     modal.show();
-    }
-   // Event pada tombol "Detail"
+  }
+
+  // Event tombol DETAIL
   document.querySelectorAll(".btn-detail").forEach(btn => {
     btn.addEventListener("click", function () {
       const row = this.closest("tr");
 
-      // Ambil data dari tabel
-      const nama = row.children[0].innerText;
-      const tanggal = row.children[1].innerText;
-      const tempat = row.children[2].innerHTML; 
-      const status = row.children[3].innerHTML;
+      const judul = row.children[1].innerText;   // Nama Rapat
+      const tanggal = row.children[2].innerText; // Tanggal
+      const waktu = row.children[3].innerText; // Waktu
+      const tempat = row.children[4].innerHTML;  // Tempat
+      const status = row.children[5].innerHTML;  // Status
 
-      // Kirim ke modal
-      showDetailKehadiran(nama, tanggal, tempat, status);
+      showDetailKehadiran(judul, tanggal, waktu, tempat, status);
     });
   });
-  //CARD//
+
+  // Update kartu statistik
   function updateCards() {
-      let totalRows = 0;
-      let totalHadir = 0;
-      let totalTidakHadir = 0;
+    let totalRows = 0;
+    let totalHadir = 0;
+    let totalTidakHadir = 0;
 
-      document.querySelectorAll("table tbody tr").forEach(row => {
-          totalRows++;
+    document.querySelectorAll("table tbody tr").forEach(row => {
+      totalRows++;
 
-          const status = row.children[3].innerText.trim();
+      const statusText = row.children[5].innerText.trim();
 
-          if (status === "Hadir") totalHadir++;
-          else if (status === "Tidak Hadir") totalTidakHadir++;
-      });
+      if (statusText === "Hadir") totalHadir++;
+      else if (statusText === "Tidak Hadir") totalTidakHadir++;
+    });
 
-      document.getElementById("totalHadir").innerText = totalHadir;
-      document.getElementById("totalTidakHadir").innerText = totalTidakHadir;
+    document.getElementById("totalHadir").innerText = totalHadir;
+    document.getElementById("totalTidakHadir").innerText = totalTidakHadir;
 
-      let presentase = totalRows > 0 ? Math.round((totalHadir / totalRows) * 100) : 0;
-      document.getElementById("persentaseKehadiran").innerText = presentase + "%";
+    let presentase = totalRows > 0 ? Math.round((totalHadir / totalRows) * 100) : 0;
+    document.getElementById("persentaseKehadiran").innerText = presentase + "%";
   }
 
-  // Jalankan saat halaman dibuka
   updateCards();
-
 </script>
 </body>
 </html>
