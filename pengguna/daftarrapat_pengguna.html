@@ -5,9 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Daftar Rapat Peserta - IF1A2 TaskMeet</title>
 
-  <!-- Bootstrap 5 & Icons -->
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- DataTables Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
   <style>
     body {
@@ -37,7 +42,7 @@
     }
 
     .sidebar a:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 3px;
       transform: translateX(4px);
     }
@@ -45,25 +50,15 @@
     .main-content {
       margin-left: 240px;
       padding: 50px 30px;
-      transition: 0.3s;
     }
+
     .card-rail {
-            background: #fff;
-            border-radius: 10px;
-            padding: 18px;
-            box-shadow: 0 6px 18px rgba(18, 38, 63, .06);
-        }
-
-    .card-click {
-      cursor: pointer;
-      transition: 0.25s;
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 6px 18px rgba(18, 38, 63, .06);
     }
 
-    .card-click:hover {
-      transform: scale(1.03);
-    }
-
-    /* Responsiveness */
     @media(max-width: 768px) {
       .sidebar {
         left: -240px;
@@ -73,7 +68,6 @@
       }
       .main-content {
         margin-left: 0;
-
       }
       .toggle-btn {
         position: fixed;
@@ -92,7 +86,7 @@
 
 <body>
 
-  <!-- Sidebar -->
+  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div class="text-center mb-4">
       <img src="format_gambar/logo.png" width="110" class="rounded-circle mb-2">
@@ -102,7 +96,7 @@
     <a href="dashboard_pengguna.html"><i class="bi bi-house-door me-2"></i> Dashboard</a>
     <a href="daftarrapat_pengguna.html"><i class="bi bi-calendar me-2"></i> Daftar Rapat</a>
     <a href="riwayatRapat_pengguna.html"><i class="bi bi-clock-history me-2"></i> Riwayat Rapat</a>
-    <a href="detailRapat_pengguna.html"><i class="bi bi-file-text me-2"></i>Detail Kehadiran</a>
+    <a href="detailRapat_pengguna.html"><i class="bi bi-file-text me-2"></i> Detail Kehadiran</a>
     <a href="profil_pengguna.html"><i class="bi bi-person-circle me-2"></i> Profile</a>
 
     <div class="position-absolute bottom-0 w-100">
@@ -113,108 +107,131 @@
   <!-- Toggle Button Mobile -->
   <button class="toggle-btn d-md-none" id="toggleBtn"><i class="bi bi-list"></i></button>
 
-  <!-- Main Content -->
-<div class="main-content">
-    <div class="row g-3">
-        <div class="col-lg-12">
-            <div class="card-rail">
-                <h4 class="fw-bold mb-4">Daftar Rapat Akan Datang</h4>
-                <div class="table-responsive">
-                    <table class="table table-bordered bg-white table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>No.</th>
-                                <th>Judul Rapat</th>
-                                <th>Tanggal</th>
-                                <th>Waktu</th>
-                                <th>Lokasi/Link</th>
-                                <th>Status</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-left">
-        <tr>
-          <td>1</td>
-          <td>Koordinasi Mingguan</td>
-          <td>12 Nov 2025</td>
-          <td>15:00</td>
-          <td>Zoom</td>
-          <td><span class="badge bg-warning text-dark">Belum Konfirmasi</span></td>
-          <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Evaluasi Proyek A</td>
-          <td>14 Nov 2025</td>
-          <td>13:00</td>
-          <td>Ruang Rapat B</td>
-          <td><span class="badge bg-success">Hadir</span></td>
-          <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Penyusunan Laporan Akhir</td>
-          <td>18 Nov 2025</td>
-          <td>18:00</td>
-          <td>Zoom</td>
-          <td><span class="badge bg-danger">Tidak Hadir</span></td>
-          <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <!-- Modal Konfirmasi Rapat -->
-<div class="modal fade" id="modalKonfirmasi" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="card-rail">
+      <h4 class="fw-bold mb-4">Daftar Rapat Akan Datang</h4>
 
-      <div class="modal-header">
-        <h5 class="modal-title fw-bold" id="namaRapat">Konfirmasi Kehadiran</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      <div class="table-responsive">
+        <table id="tabelRapat" class="table table-bordered bg-white table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>No</th>
+              <th>Judul Rapat</th>
+              <th>Tanggal</th>
+              <th>Waktu</th>
+              <th>Lokasi</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="text-left">
+            <tr>
+              <td>1</td>
+              <td>Koordinasi Mingguan</td>
+              <td>12 Nov 2025</td>
+              <td>15:00</td>
+              <td>Zoom</td>
+              <td><span class="badge bg-warning text-dark">Belum Konfirmasi</span></td>
+              <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Evaluasi Proyek A</td>
+              <td>14 Nov 2025</td>
+              <td>13:00</td>
+              <td>Ruang Rapat B</td>
+              <td><span class="badge bg-success">Hadir</span></td>
+              <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Penyusunan Laporan Akhir</td>
+              <td>18 Nov 2025</td>
+              <td>18:00</td>
+              <td>Zoom</td>
+              <td><span class="badge bg-danger">Tidak Hadir</span></td>
+              <td><button class="btn btn-primary btn-sm btn-konfirmasi">Konfirmasi</button></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-
-      <div class="modal-body">
-        <button id="btnHadir" class="btn btn-success w-100 mb-2">Hadir</button>
-        <button id="btnTidakHadir" class="btn btn-danger w-100">Tidak Hadir</button>
-      </div>
-
     </div>
   </div>
-</div>
 
+  <!-- MODAL -->
+  <div class="modal fade" id="modalKonfirmasi" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Konfirmasi Kehadiran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body">
+          <button id="btnHadir" class="btn btn-success w-100 mb-2">Hadir</button>
+          <button id="btnTidakHadir" class="btn btn-danger w-100">Tidak Hadir</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery (wajib untuk DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- Bootstrap -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
   <script>
+    // Toggle Sidebar Mobile
     document.getElementById('toggleBtn').onclick = () => {
       document.getElementById('sidebar').classList.toggle('active');
     }
-     const modalKonfirmasi = new bootstrap.Modal(document.getElementById('modalKonfirmasi'));
-  let selectedRow = null;
 
-  // Klik tombol konfirmasi
-  document.querySelectorAll(".btn-konfirmasi").forEach(btn => {
-    btn.addEventListener("click", function () {
-      selectedRow = this.closest("tr"); 
-      modalKonfirmasi.show();
+    // MODAL KONFIRMASI
+    const modalKonfirmasi = new bootstrap.Modal(document.getElementById('modalKonfirmasi'));
+    let selectedRow = null;
+
+    document.querySelectorAll(".btn-konfirmasi").forEach(btn => {
+      btn.addEventListener("click", function () {
+        selectedRow = this.closest("tr");
+        modalKonfirmasi.show();
+      });
     });
-  });
 
-  // Tombol "Hadir"
-  document.getElementById("btnHadir").addEventListener("click", function () {
-    if (selectedRow) {
-      selectedRow.querySelector("td:nth-child(4)").innerHTML =
+    document.getElementById("btnHadir").addEventListener("click", function () {
+      selectedRow.querySelector("td:nth-child(6)").innerHTML =
         `<span class="badge bg-success">Hadir</span>`;
-    }
-    modalKonfirmasi.hide();
-  });
+      modalKonfirmasi.hide();
+    });
 
-  // Tombol "Tidak Hadir"
-  document.getElementById("btnTidakHadir").addEventListener("click", function () {
-    if (selectedRow) {
-      selectedRow.querySelector("td:nth-child(4)").innerHTML =
+    document.getElementById("btnTidakHadir").addEventListener("click", function () {
+      selectedRow.querySelector("td:nth-child(6)").innerHTML =
         `<span class="badge bg-danger">Tidak Hadir</span>`;
-    }
-    modalKonfirmasi.hide();
-  });
-</script>
+      modalKonfirmasi.hide();
+    });
+
+    // DATATABLES AKTIF
+    $(document).ready(function () {
+      $('#tabelRapat').DataTable({
+        language: {
+          search: "Cari:",
+          lengthMenu: "Tampilkan _MENU_ data",
+          info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+          paginate: {
+            previous: "Sebelumnya",
+            next: "Berikutnya"
+          }
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>
