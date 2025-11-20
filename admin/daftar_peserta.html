@@ -237,7 +237,7 @@
                                 <td>Teknik Informatika</td>
                                 <td>blabla@gmail.com</td>
                                 <td> <button class="btn btn-primary btn-sm text-white fw-semibold btn-detail"> Detail
-                                    </button> </td>
+                                </button> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -253,7 +253,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Tambah Data User</h5>
+                    <h5 class="modal-title">Tambah Data Peserta</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -264,18 +264,18 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Jurusan</label>
-                            <select class="form-control" id="divisiInput" required>
+                            <select class="form-control" id="jurusanInput" required>
                                 <option value="">-- Pilih Jurusan --</option>
                                 <option value="Teknik informatika">Teknik Informatika</option>
                                 <option value="Teknik Mesin">Teknik Mesin</option>
                                 <option value="Manajemen Bisnis">Manajemen Bisnis</option>
-                                <option value="eknik Elektronika">Teknik Elektronika</option>
+                                <option value="Teknik Elektronika">Teknik Elektronika</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label">Prodi</label>
-                            <input type="text" class="form-control" id="himpunanInput" required>
+                            <input type="text" class="form-control" id="prodiInput" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email</label>
@@ -299,8 +299,8 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>Nama:</strong> <span id="detailNama"></span></p>
-                    <p><strong>Divisi:</strong> <span id="detailDivisi"></span></p>
-                    <p><strong>Himpunan:</strong> <span id="detailHimpunan"></span></p>
+                    <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
+                    <p><strong>Prodi:</strong> <span id="detailProdi"></span></p>
                     <p><strong>Email:</strong> <span id="detailEmail"></span></p>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -333,112 +333,126 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            const sidebar = document.getElementById('sidebar');
-            const btnToggle = document.getElementById('btnToggleFloating');
+$(document).ready(function () {
 
-            btnToggle.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.toggle('show');
-                } else {
-                    sidebar.classList.toggle('hide');
+    let editMode = false;
+    let editRow = null;
+
+    const sidebar = document.getElementById('sidebar');
+    const btnToggle = document.getElementById('btnToggleFloating');
+
+    btnToggle.addEventListener('click', () => {
+        if (window.innerWidth < 992) {
+            sidebar.classList.toggle('show');
+        } else {
+            sidebar.classList.toggle('hide');
+        }
+    });
+
+    const table = $('#userTable').DataTable({
+        pageLength: 5,
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
+        columnDefs: [
+            {
+                targets: 0,
+                searchable: false,
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
                 }
-            });
+            }
+        ]
+    });
 
-            const table = $('#userTable').DataTable({
-                pageLength: 5,
-                dom: 'Bfrtip',
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis'],
-                columnDefs: [
-                    {
-                        targets: 0, // kolom nomor
-                        searchable: false,
-                        orderable: false,
-                        render: function (data, type, row, meta) {
-                            // Nomor otomatis berdasarkan urutan baris
-                            return meta.row + meta.settings._iDisplayStart + 1;
-                        }
-                    }
-                ]
-            });
+    // FILTER JURUSAN
+    $('#filterJenis').on('change', function () {
+        table.column(2).search(this.value).draw();
+    });
 
-            $('#searchBox').on('keyup', function () {
-                table.search(this.value).draw();
-            });
+    // TOMBOL TAMBAH
+    $('#btnTambah').on('click', function () {
+        editMode = false;
+        editRow = null;
+        $('#formTambah')[0].reset();
+        $('#modalTambah').modal('show');
+    });
 
-            $('#filterJenis').on('change', function () {
-                table.column(1).search(this.value).draw();
-            });
+    // SUBMIT TAMBAH / EDIT
+    $('#formTambah').on('submit', function (e) {
+        e.preventDefault();
 
-            $('#btnTambah').on('click', function () {
-                $('#modalTambah').modal('show');
-            });
+        const namaUser = $('#namaUserInput').val();
+        const jurusan = $('#jurusanInput').val();
+        const prodi = $('#prodiInput').val();
+        const email = $('#emailInput').val();
 
-            $('#formTambah').on('submit', function (e) {
-                e.preventDefault();
-                const namaUser = $('#namaUserInput').val();
-                const divisi = $('#divisiInput').val();
-                const himpunan = $('#himpunanInput').val();
-                const email = $('#emailInput').val();
-                const no = table.data().count() + 1;
+        if (!editMode) {
+            // TAMBAH DATA
+            table.row.add([
+                "",
+                namaUser,
+                jurusan,
+                prodi,
+                email,
+                `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
+            ]).draw(false);
 
-                table.row.add([
-                    "",
-                    namaUser,
-                    divisi,
-                    himpunan,
-                    email,
-                    `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
-                ]).draw(false);
+        } else {
+            // EDIT DATA
+            editRow.data([
+                "",
+                namaUser,
+                jurusan,
+                prodi,
+                email,
+                `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
+            ]).draw(false);
+        }
 
-                $('#modalTambah').modal('hide');
-                this.reset();
-            });
-            // Event tombol detail
-            $('#userTable tbody').on('click', '.btn-detail', function () {
-                const row = table.row($(this).closest('tr')).data();
+        $('#modalTambah').modal('hide');
+        this.reset();
+        editMode = false;
+        editRow = null;
+    });
 
-                $('#detailNama').text(row[1]);
-                $('#detailDivisi').text(row[2]);
-                $('#detailHimpunan').text(row[3]);
-                $('#detailEmail').text(row[4]);
-                // Simpan row index untuk edit / hapus
-                window.selectedRow = table.row($(this).closest('tr'));
-                $('#modalDetail').modal('show');
-            });
-            $('#btnHapusDetail').on('click', function () {
-                window.selectedRow.remove().draw();
-                $('#modalDetail').modal('hide');
-            });
-            $('#btnEditDetail').on('click', function () {
-                const data = window.selectedRow.data();
-                $('#namaUserInput').val(data[1]);
-                $('#divisiInput').val(data[2]);
-                $('#himpunanInput').val(data[3]);
-                $('#emailInput').val(data[4]);
+    // DETAIL
+    $('#userTable tbody').on('click', '.btn-detail', function () {
+        const row = table.row($(this).closest('tr')).data();
 
-                $('#modalDetail').modal('hide');
-                $('#modalTambah').modal('show');
+        $('#detailNama').text(row[1]);
+        $('#detailJurusan').text(row[2]);
+        $('#detailProdi').text(row[3]);
+        $('#detailEmail').text(row[4]);
 
-                // saat submit nanti, replace row lama
-                $('#formTambah').off('submit').on('submit', function (e) {
-                    e.preventDefault();
-                    window.selectedRow.data([
-                        "",
-                        $('#namaUserInput').val(),
-                        $('#divisiInput').val(),
-                        $('#himpunanInput').val(),
-                        $('#emailInput').val(),
-                        `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail">Detail</button>`
-                    ]).draw(false);
+        window.selectedRow = table.row($(this).closest('tr'));
+        $('#modalDetail').modal('show');
+    });
 
-                    $('#modalTambah').modal('hide');
-                    this.reset();
-                });
-            });
-        });
-    </script>
+    // HAPUS
+    $('#btnHapusDetail').on('click', function () {
+        window.selectedRow.remove().draw();
+        $('#modalDetail').modal('hide');
+    });
 
+    // EDIT
+    $('#btnEditDetail').on('click', function () {
+
+        const data = window.selectedRow.data();
+
+        $('#namaUserInput').val(data[1]);
+        $('#jurusanInput').val(data[2]);
+        $('#prodiInput').val(data[3]);
+        $('#emailInput').val(data[4]);
+
+        editMode = true;
+        editRow = window.selectedRow;
+
+        $('#modalDetail').modal('hide');
+        $('#modalTambah').modal('show');
+    });
+
+});
+</script>
 </body>
-
 </html>
