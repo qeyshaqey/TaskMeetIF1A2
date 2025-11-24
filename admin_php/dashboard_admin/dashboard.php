@@ -199,7 +199,7 @@
                                 <td>Rekayasa Multimedia</td>
                                 <td>2025-04-16</td>
                                 <td>08:00</td>
-                                <td>SEKARANG</td>
+                                <td>BERLANGSUNG</td>
                             </tr>
                             <tr>
                                 <td>2</td>
