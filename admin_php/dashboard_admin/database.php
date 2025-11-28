@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db   = "dashboard_admin";
+$db   = "db_rapat";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 

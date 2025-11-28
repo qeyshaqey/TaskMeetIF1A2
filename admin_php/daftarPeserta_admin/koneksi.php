@@ -2,7 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db = "taskmeet"; //Nama Database
+$db = "db_rapat"; //Nama Database
 // melakukan koneksi ke db
 $koneksi = mysqli_connect(
     $host, $user, $pass, $db);

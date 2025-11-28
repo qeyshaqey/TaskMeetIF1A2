@@ -3,7 +3,7 @@
  $host = "localhost";
  $user = "root"; // Ganti dengan username database Anda
  $pass = ""; // Ganti dengan password database Anda
- $dbname = "db_agenda"; // Nama database yang dibuat
+ $dbname = "db_rapat"; // Nama database yang dibuat
 
 // Buat koneksi
  $conn = new mysqli($host, $user, $pass, $dbname);
