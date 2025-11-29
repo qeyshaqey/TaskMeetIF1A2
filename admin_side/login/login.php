@@ -1,0 +1,315 @@
+<?php
+require_once 'session.php';
+require_once 'auth.php';
+
+// Jika user sudah login, redirect ke dashboard
+if (is_logged_in()) {
+    redirect('../dashboard/dashboard.php');
+}
+
+ $error = '';
+ $success = '';
+
+// Proses login
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $user_type = $_POST['jenis']; // Ambil jenis user dari form
+    
+    if (empty($username) || empty($password)) {
+        $error = 'Username dan password harus diisi';
+    } else {
+        // Untuk admin, gunakan hardcoded credentials
+        if ($user_type === 'Admin') {
+            // Hardcoded admin credentials
+            $admin_username = 'admin'; // Ganti dengan username admin yang diinginkan
+            $admin_password = 'admin123'; // Ganti dengan password admin yang diinginkan
+            
+            if ($username === $admin_username && $password === $admin_password) {
+                // Set session untuk admin
+                $_SESSION['user_id'] = 0; // ID khusus untuk admin
+                $_SESSION['username'] = $admin_username;
+                $_SESSION['full_name'] = 'Administrator';
+                $_SESSION['user_role'] = 'admin';
+                
+                // Handle remember me
+                if (isset($_POST['remember']) && $_POST['remember'] === 'on') {
+                    setcookie('remember_admin', $admin_username, time() + (86400 * 30), "/"); // 30 days
+                }
+                
+                redirect('../dashboard/dashboard.php');
+            } else {
+                $error = 'Username atau password admin salah';
+            }
+        } else {
+            // Untuk user, gunakan fungsi login yang ada
+            if (login($username, $password)) {
+                // Handle remember me
+                if (isset($_POST['remember']) && $_POST['remember'] === 'on') {
+                    setcookie('remember_user', $username, time() + (86400 * 30), "/"); // 30 days
+                }
+                
+                redirect('../dashboard/dashboard.php');
+            } else {
+                $error = 'Username atau password salah';
+            }
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url(https://images.unsplash.com/photo-1557804506-669a67965ba0) no-repeat center center fixed;
+            background-size: cover;
+        }
+        form {
+            width: 35%;
+            margin: 30px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+        h3 {
+            display: block;
+            margin-top: 3px;
+            margin-bottom: 10px;
+            /* Mengembalikan ke default browser untuk mengatasi Bootstrap */
+            font-size: 1.17em; 
+            font-weight: bold;
+        }
+        img {
+            display: block;
+            margin: 0 auto 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        .vertical-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        input[type="email"],
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .sign p {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #784B84;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #702963;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+        
+        /* Icon styling */
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .input-group i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            z-index: 10;
+        }
+        .input-group input,
+        .input-group select {
+            padding-left: 35px;
+        }
+        
+        /* Additional features styling */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .remember-me {
+            display: flex;
+            align-items: center;
+        }
+        .remember-me input[type="checkbox"] {
+            margin-right: 8px;
+            width: auto;
+        }
+        .remember-me label {
+            margin-bottom: 0;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .forgot-password {
+            font-size: 14px;
+            color: #784B84;
+            text-decoration: none;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+            color: #702963;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 1200px) {
+            form {
+                width: 40%;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            form {
+                width: 50%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            form {
+                width: 70%;
+            }
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            form {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PERBAIKAN: Form action diubah ke login.php -->
+    <form action="login.php" method="post">
+        <img width="150" height="150" src="../format_gambar/logo.png" alt="Logo">
+        <h3 style="text-align: center;">Login to your session</h3>
+        
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php endif; ?>
+        
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <select name="jenis">
+                <option value="" disabled selected>-- Pilih Jenis User --</option>
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+            </select>
+        </div>
+        
+        <div class="input-group">
+            <i class="fas fa-user-circle"></i>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        
+        <!-- Additional features: Remember Me & Forgot Password -->
+        <div class="form-options">
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember Me</label>
+            </div>
+            <a href="resetPW_user.php" class="forgot-password">Forgot Password?</a>
+        </div>
+        
+        <button type="submit">Login</button>
+        
+        <div class="sign">
+            <p>Belum ada akun?<a href="signin.php"> Sign In</a></p>
+        </div>
+    </form>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Handle Remember Me functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberCheckbox = document.getElementById('remember');
+            const usernameInput = document.getElementById('username');
+            const jenisSelect = document.querySelector('select[name="jenis"]');
+            
+            // Check if user was remembered before
+            const rememberedAdmin = localStorage.getItem('rememberedAdmin');
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            
+            if (rememberedAdmin) {
+                usernameInput.value = rememberedAdmin;
+                jenisSelect.value = 'Admin';
+                rememberCheckbox.checked = true;
+            } else if (rememberedUser) {
+                usernameInput.value = rememberedUser;
+                jenisSelect.value = 'User';
+                rememberCheckbox.checked = true;
+            }
+            
+            // Handle form submission
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (rememberCheckbox.checked) {
+                    // Save username to localStorage based on role
+                    if (jenisSelect.value === 'Admin') {
+                        localStorage.setItem('rememberedAdmin', usernameInput.value);
+                        localStorage.removeItem('rememberedUser');
+                    } else {
+                        localStorage.setItem('rememberedUser', usernameInput.value);
+                        localStorage.removeItem('rememberedAdmin');
+                    }
+                } else {
+                    // Remove from localStorage if not checked
+                    localStorage.removeItem('rememberedAdmin');
+                    localStorage.removeItem('rememberedUser');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

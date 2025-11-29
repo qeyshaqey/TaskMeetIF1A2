@@ -1,9 +1,0 @@
-<?php
-include 'koneksi.php';
-
-$id = $_GET['id'];
-$db = mysqli_query($koneksi, "SELECT * FROM peserta WHERE id='$id'");
-$data = mysqli_fetch_assoc($db);
-
-// Kembalikan JSON
-echo json_encode($data);

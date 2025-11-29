@@ -15,4 +15,7 @@ if ($conn->connect_error) {
 
 // Set charset
  $conn->set_charset("utf8mb4");
+
+return $conn;
+
 ?>
