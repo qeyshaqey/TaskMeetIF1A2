@@ -2,9 +2,13 @@
 require_once 'session.php';
 require_once 'auth.php';
 
+ $success_message = '';
+if (isset($_GET['registered']) && $_GET['registered'] == 1) {
+    $success_message = 'Registrasi berhasil! Silakan login dengan akun Anda.';
+}
 // Jika user sudah login, redirect ke dashboard
 if (is_logged_in()) {
-    redirect('../dashboard/dashboard.php');
+    redirect('../admin_side/dashboard/dashboard.php');
 }
 
  $error = '';
@@ -37,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setcookie('remember_admin', $admin_username, time() + (86400 * 30), "/"); // 30 days
                 }
                 
-                redirect('../dashboard/dashboard.php');
+                redirect('../admin_side/dashboard/dashboard.php');
             } else {
                 $error = 'Username atau password admin salah';
             }
@@ -49,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setcookie('remember_user', $username, time() + (86400 * 30), "/"); // 30 days
                 }
                 
-                redirect('../dashboard/dashboard.php');
+                redirect('../user_side/dashboard_pengguna.php');
             } else {
                 $error = 'Username atau password salah';
             }
@@ -227,8 +231,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <!-- PERBAIKAN: Form action diubah ke login.php -->
     <form action="login.php" method="post">
-        <img width="150" height="150" src="../format_gambar/logo.png" alt="Logo">
-        <h3 style="text-align: center;">Login to your session</h3>
+        <img width="150" height="150" src="../admin_side/format_gambar/logo.png" alt="Logo">
+        <h3 style="text-align: center;">Masuk ke sesi Anda</h3>
+        
+        <?php if (!empty($success_message)): ?>
+            <div class="alert alert-success"><?php echo $success_message; ?></div>
+        <?php endif; ?>
         
         <?php if (!empty($error)): ?>
             <div class="alert alert-danger"><?php echo $error; ?></div>
@@ -239,33 +247,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <select name="jenis">
                 <option value="" disabled selected>-- Pilih Jenis User --</option>
                 <option value="Admin">Admin</option>
-                <option value="User">User</option>
+                <option value="User">Pengguna</option>
             </select>
         </div>
         
         <div class="input-group">
             <i class="fas fa-user-circle"></i>
-            <input type="text" id="username" name="username" placeholder="Username" required>
+            <input type="text" id="username" name="username" placeholder="Nama Pengguna" required>
         </div>
 
         <div class="input-group">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" name="password" placeholder="Password" required>
+            <input type="password" id="password" name="password" placeholder="Kata Sandi" required>
         </div>
         
         <!-- Additional features: Remember Me & Forgot Password -->
         <div class="form-options">
             <div class="remember-me">
                 <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Remember Me</label>
+                <label for="remember">Ingat Saya</label>
             </div>
-            <a href="resetPW_user.php" class="forgot-password">Forgot Password?</a>
+            <a href="reset_password.php" class="forgot-password">Lupa Kata Sandi?</a>
         </div>
         
-        <button type="submit">Login</button>
+        <button type="submit">Masuk</button>
         
         <div class="sign">
-            <p>Belum ada akun?<a href="signin.php"> Sign In</a></p>
+            <p>Belum ada akun?<a href="signin.php"> Daftar</a></p>
         </div>
     </form>
 

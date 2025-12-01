@@ -1,4 +1,13 @@
 <?php
+require_once '../../autentikasi/session.php';
+require_once '../../autentikasi/functions.php';
+
+// Jika admin belum login, redirect ke halaman login
+if (!is_logged_in()) {
+    redirect('../../autentikasi/login.php');
+}
+?>
+<?php
     include 'koneksi.php';
 
     // Ambil semua peserta dari database
@@ -287,7 +296,7 @@
                 <a class="nav-link active" href="peserta.php"><i class="fas fa-box"></i> Daftar Peserta</a>
                 <a class="nav-link" href="../daftar_agenda/daftarAgenda_admin.php"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
                 <hr style="border-color: rgba(255,255,255,0.3); margin: 20px 6px;">
-                <a class="nav-link" href="../login/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                <a class="nav-link" href="../../autentikasi/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
             </nav>
         </aside>
         <!-- MAIN CONTENT -->

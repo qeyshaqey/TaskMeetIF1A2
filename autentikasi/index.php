@@ -7,6 +7,6 @@ if (!is_logged_in()) {
     redirect('login.php');
 } else {
     // Jika sudah login, redirect ke dashboard
-    redirect('../dashboard/dashboard.php');
+    redirect('../admin_side/dashboard/dashboard.php');
 }
 ?>

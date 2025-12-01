@@ -1,5 +1,5 @@
 <?php
-require_once '../daftar_agenda/config.php';
+require_once '../admin_side/daftar_agenda/config.php';
 require_once 'functions.php';
 
 // Fungsi login untuk user biasa
