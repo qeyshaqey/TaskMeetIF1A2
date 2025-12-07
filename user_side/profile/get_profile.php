@@ -9,17 +9,16 @@ if (!isset($_SESSION['user_id'])) {
 
 $id = $_SESSION['user_id'];
 
-$query = mysqli_query($koneksi, "SELECT * FROM users WHERE id='$id'");
+$query = mysqli_query($koneksi, "SELECT * FROM user WHERE id='$id'");
 $user = mysqli_fetch_assoc($query);
 
-// Kirimkan semua data user (termasuk jurusan & prodi)
 echo json_encode([
-    "username" => $user['username'],
-    "email"    => $user['email'],
-    "nim"      => $user['nim'],
-    "nama"     => $user['nama'],
-    "jurusan"  => $user['jurusan'],
-    "prodi"    => $user['prodi'],
-    "foto"     => $user['foto']
+    "nama"    => $user['nama'],
+    "username"=> $user['username'],
+    "email"   => $user['email'],
+    "nim"     => $user['nim'],
+    "jurusan" => $user['jurusan'],
+    "prodi"   => $user['prodi'],
+    "foto"    => $user['foto']
 ]);
 ?>
