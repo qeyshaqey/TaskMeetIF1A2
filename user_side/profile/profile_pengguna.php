@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $id = $_SESSION['user_id'];
-$query = "SELECT * FROM users WHERE id='$id'";
+$query = "SELECT * FROM user WHERE id='$id'";
 $result = mysqli_query($koneksi, $query);
 $user = mysqli_fetch_assoc($result);
 ?>
@@ -209,6 +209,23 @@ $user = mysqli_fetch_assoc($result);
 
                 <hr>
 
+                <div class="mb-3">
+                  <label class="form-label">Password Saat Ini</label>
+                  <input id="passwordOld" class="form-control" type="password">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Password Baru</label>
+                  <input id="passwordNew" class="form-control" type="password">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Konfirmasi Password Baru</label>
+                  <input id="passwordConfirm" class="form-control" type="password">
+                </div>
+
+                <hr>
+
                 <div class="d-flex justify-content-end gap-2 mt-3">
                   <button class="btn btn-danger" type="button" data-bs-dismiss="modal">Batal</button>
                   <button class="btn btn-success" type="submit">Simpan</button>
@@ -283,7 +300,13 @@ $user = mysqli_fetch_assoc($result);
         editProdi.value = profileProdi.textContent;
 
         previewImg.src = profileImage.src;
+
+        // reset password input
+        document.getElementById("passwordOld").value = "";
+        document.getElementById("passwordNew").value = "";
+        document.getElementById("passwordConfirm").value = "";
       });
+
 
     // SIMPAN
     document.getElementById("editProfileForm")
@@ -297,20 +320,36 @@ $user = mysqli_fetch_assoc($result);
         formData.append("jurusan", editJurusan.value);
         formData.append("prodi", editProdi.value);
         formData.append("foto", editPhoto.files[0]);
+        formData.append("passwordOld", document.getElementById("passwordOld").value);
+        formData.append("passwordNew", document.getElementById("passwordNew").value);
+        formData.append("passwordConfirm", document.getElementById("passwordConfirm").value);
+
 
         const req = await fetch("update_profile.php", {
           method: "POST",
           body: formData
         });
 
-        if (await req.text() === "OK") {
+        const res = await req.text();
+
+        if (res === "OK") {
           loadProfile();
           bootstrap.Modal.getInstance(document.getElementById("editProfileModal")).hide();
+        } else if (res === "WRONG_OLD") {
+          alert("Password lama salah!");
+        } else if (res === "NEW_MISMATCH") {
+          alert("Password baru dan konfirmasi tidak sama!");
+        } else if (res === "OLD_EMPTY") {
+          alert("Password lama harus diisi!");
+        } else {
+          alert("Terjadi kesalahan: " + res);
         }
+
       });
 
     loadProfile();
   </script>
 
 </body>
+
 </html>
