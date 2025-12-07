@@ -3,67 +3,87 @@ session_start();
 include "koneksi.php";
 
 if (!isset($_SESSION['user_id'])) {
-    echo "ERROR";
+    echo "NO_SESSION";
     exit();
 }
 
 $id = $_SESSION['user_id'];
 
-// Ambil data dari AJAX
-$nama     = $_POST['nama'];
-$nim      = $_POST['nim'];
-$email    = $_POST['email'];
-$jurusan  = $_POST['jurusan'];
-$prodi    = $_POST['prodi'];
+// Ambil data user dari database
+$q = mysqli_query($koneksi, "SELECT * FROM user WHERE id='$id'");
+$user = mysqli_fetch_assoc($q);
 
-// Handle foto terbaru
-$fotoBaru = null;
-
-if (!empty($_FILES['foto']['name'])) {
-
-    $namaFile = $_FILES['foto']['name'];
-    $tmpFile  = $_FILES['foto']['tmp_name'];
-    $folder   = "uploads/";
-
-    // buat folder kalau belum ada
-    if (!is_dir($folder)) {
-        mkdir($folder, 0777, true);
-    }
-
-    $namaBaru = time() . "_" . $namaFile;
-
-    if (move_uploaded_file($tmpFile, $folder . $namaBaru)) {
-        $fotoBaru = $namaBaru;
-
-        // hapus foto lama
-        $qUser = mysqli_query($koneksi, "SELECT foto FROM users WHERE id='$id'");
-        $oldFoto = mysqli_fetch_assoc($qUser)['foto'];
-
-        if ($oldFoto && file_exists("uploads/" . $oldFoto)) {
-            unlink("uploads/" . $oldFoto);
-        }
-    }
+if (!$user) {
+    echo "USER_NOT_FOUND";
+    exit();
 }
 
-// Query update
-$query = "UPDATE users SET 
+// Ambil data input
+$nama    = $_POST['nama'];
+$nim     = $_POST['nim'];
+$email   = $_POST['email'];
+$jurusan = $_POST['jurusan'];
+$prodi   = $_POST['prodi'];
+
+$oldPass = $_POST['passwordOld'] ?? "";
+$newPass = $_POST['passwordNew'] ?? "";
+$confirm = $_POST['passwordConfirm'] ?? "";
+
+
+// ==========================
+// HANDLE UPDATE FOTO
+// ==========================
+$fotoBaru = $user['foto'];
+
+if (!empty($_FILES['foto']['name'])) {
+    $namaFile = time() . "_" . $_FILES['foto']['name'];
+    $tmp = $_FILES['foto']['tmp_name'];
+
+    move_uploaded_file($tmp, "uploads/" . $namaFile);
+    $fotoBaru = $namaFile;
+}
+
+
+// ==========================
+// VALIDASI UPDATE PASSWORD
+// ==========================
+$updatePasswordSQL = "";
+
+if ($oldPass != "" || $newPass != "" || $confirm != "") {
+
+    if ($oldPass == "") {
+        echo "OLD_EMPTY";
+        exit();
+    }
+
+    if ($oldPass !== $user['password']) {
+        echo "WRONG_OLD";
+        exit();
+    }
+
+    if ($newPass != $confirm) {
+        echo "NEW_MISMATCH";
+        exit();
+    }
+
+    $updatePasswordSQL = ", password='$newPass'";
+}
+
+// ==========================
+// UPDATE DATA PROFIL
+// ==========================
+$sql = "UPDATE user SET 
             nama='$nama',
             nim='$nim',
             email='$email',
             jurusan='$jurusan',
-            prodi='$prodi'";
+            prodi='$prodi',
+            foto='$fotoBaru'
+            $updatePasswordSQL
+        WHERE id='$id'";
 
-if ($fotoBaru !== null) {
-    $query .= ", foto='$fotoBaru'";
-}
-
-$query .= " WHERE id='$id'";
-
-$update = mysqli_query($koneksi, $query);
-
-if ($update) {
+if (mysqli_query($koneksi, $sql)) {
     echo "OK";
 } else {
-    echo "ERROR";
+    echo "DB_ERROR";
 }
-?>
