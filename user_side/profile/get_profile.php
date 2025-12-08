@@ -7,16 +7,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$id = $_SESSION['user_id'];
+ $id = $_SESSION['user_id'];
 
-$query = mysqli_query($koneksi, "SELECT * FROM user WHERE id='$id'");
-$user = mysqli_fetch_assoc($query);
+ $query = mysqli_query($koneksi, "SELECT * FROM users WHERE id='$id'");
+ $user = mysqli_fetch_assoc($query);
 
 echo json_encode([
-    "nama"    => $user['nama'],
+    "nama"    => $user['full_name'],
     "username"=> $user['username'],
     "email"   => $user['email'],
-    "nim"     => $user['nim'],
     "jurusan" => $user['jurusan'],
     "prodi"   => $user['prodi'],
     "foto"    => $user['foto']

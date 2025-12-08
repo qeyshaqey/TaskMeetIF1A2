@@ -3,12 +3,12 @@ session_start();
 include 'koneksi.php';
 
 if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
+  header("Location: ../../autentikasi/login.php");
   exit();
 }
 
 $id = $_SESSION['user_id'];
-$query = "SELECT * FROM user WHERE id='$id'";
+$query = "SELECT * FROM users WHERE id='$id'";
 $result = mysqli_query($koneksi, $query);
 $user = mysqli_fetch_assoc($result);
 ?>
@@ -122,14 +122,12 @@ $user = mysqli_fetch_assoc($result);
       <h5>IF1A2 TaskMeet</h5>
     </div>
 
-    <a href="dashboard_pengguna.html"><i class="bi bi-house-door me-2"></i> Dashboard</a>
-    <a href="daftarrapat_pengguna.html"><i class="bi bi-calendar me-2"></i> Daftar Rapat</a>
-    <a href="riwayatRapat_pengguna.html"><i class="bi bi-clock-history me-2"></i> Riwayat Rapat</a>
-    <a href="detailRapat_pengguna.html"><i class="bi bi-file-text me-2"></i>Detail Kehadiran</a>
-    <a href="profil_pengguna.html"><i class="bi bi-person-circle me-2"></i> Profile</a>
+    <a href="../dashboard_p/dashboard_pengguna.php"><i class="bi bi-house-door me-2"></i> Dashboard</a>
+    <a href="../detail/detail_rapat.php"><i class="bi bi-file-text me-2"></i>Detail Rapat</a>
+    <a href="profil_pengguna.php"><i class="bi bi-person-circle me-2"></i> Profile</a>
 
     <div class="position-absolute bottom-0 w-100">
-      <a href="landing.html"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a>
+      <a href="../../autentikasi/logout.php"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a>
     </div>
   </div>
 
@@ -148,7 +146,6 @@ $user = mysqli_fetch_assoc($result);
       <div class="flex-grow-1">
         <h3 id="profileName">-</h3>
 
-        <p class="mb-1"><strong>NIM:</strong> <span id="profileNim">-</span></p>
         <p class="mb-3"><strong>Email:</strong> <span id="profileEmail">-</span></p>
         <p class="mb-1"><strong>Jurusan:</strong> <span id="profileJurusan">-</span></p>
         <p class="mb-3"><strong>Prodi:</strong> <span id="profileProdi">-</span></p>
@@ -185,11 +182,6 @@ $user = mysqli_fetch_assoc($result);
                 <div class="mb-3">
                   <label class="form-label">Nama</label>
                   <input id="editName" class="form-control">
-                </div>
-
-                <div class="mb-3">
-                  <label class="form-label">NIM</label>
-                  <input id="editNim" class="form-control">
                 </div>
 
                 <div class="mb-3">
@@ -250,7 +242,6 @@ $user = mysqli_fetch_assoc($result);
     // ELEMENT
     const profileImage = document.getElementById('profileImage');
     const profileName = document.getElementById('profileName');
-    const profileNim = document.getElementById('profileNim');
     const profileEmail = document.getElementById('profileEmail');
     const profileJurusan = document.getElementById('profileJurusan');
     const profileProdi = document.getElementById('profileProdi');
@@ -258,7 +249,6 @@ $user = mysqli_fetch_assoc($result);
     const editPhoto = document.getElementById('editPhoto');
     const previewImg = document.getElementById('previewImg');
     const editName = document.getElementById('editName');
-    const editNim = document.getElementById('editNim');
     const editEmail = document.getElementById('editEmail');
     const editJurusan = document.getElementById('editJurusan');
     const editProdi = document.getElementById('editProdi');
@@ -269,10 +259,9 @@ $user = mysqli_fetch_assoc($result);
       const user = await res.json();
 
       profileName.textContent = user.nama ?? "-";
-      profileNim.textContent = user.nim ?? "-";
       profileEmail.textContent = user.email ?? "-";
-      profileJurusan.textContent = user.jurusan ?? "-";
-      profileProdi.textContent = user.prodi ?? "-";
+      profileJurusan.textContent = user.jurusan || "Belum diisi";
+      profileProdi.textContent = user.prodi || "Belum diisi";
 
       if (user.foto) {
         profileImage.src = "uploads/" + user.foto;
@@ -294,7 +283,6 @@ $user = mysqli_fetch_assoc($result);
     document.getElementById("editProfileModal")
       .addEventListener("show.bs.modal", () => {
         editName.value = profileName.textContent;
-        editNim.value = profileNim.textContent;
         editEmail.value = profileEmail.textContent;
         editJurusan.value = profileJurusan.textContent;
         editProdi.value = profileProdi.textContent;
@@ -315,7 +303,6 @@ $user = mysqli_fetch_assoc($result);
 
         const formData = new FormData();
         formData.append("nama", editName.value);
-        formData.append("nim", editNim.value);
         formData.append("email", editEmail.value);
         formData.append("jurusan", editJurusan.value);
         formData.append("prodi", editProdi.value);
