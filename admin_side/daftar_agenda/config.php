@@ -1,21 +1,25 @@
 <?php
-// Konfigurasi koneksi database
- $host = "localhost";
- $user = "root"; // Ganti dengan username database Anda
- $pass = ""; // Ganti dengan password database Anda
- $dbname = "db_rapat"; // Nama database yang dibuat
+error_reporting(0);
+ini_set('display_errors', 0);
 
-// Buat koneksi
- $conn = new mysqli($host, $user, $pass, $dbname);
+$host = "localhost";
+$user = "root";
+$pass = ""; 
+$dbname = "db_rapat";
 
-// Periksa koneksi
-if ($conn->connect_error) {
-    die("Koneksi gagal: " . $conn->connect_error);
+try {
+    $conn = new mysqli($host, $user, $pass, $dbname);
+    
+    if ($conn->connect_error) {
+        error_log("Database connection failed: " . $conn->connect_error);
+        $conn = null;
+    } else {
+        $conn->set_charset("utf8mb4");
+    }
+} catch (Exception $e) {
+    error_log("Database connection exception: " . $e->getMessage());
+    $conn = null;
 }
 
-// Set charset
- $conn->set_charset("utf8mb4");
-
 return $conn;
-
 ?>

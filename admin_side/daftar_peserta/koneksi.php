@@ -2,8 +2,7 @@
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db = "db_rapat"; //Nama Database
-// melakukan koneksi ke db
+$db = "db_rapat";
 $koneksi = mysqli_connect(
     $host, $user, $pass, $db);
     if(!$koneksi){

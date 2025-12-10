@@ -3,7 +3,6 @@ header('Content-Type: application/json');
 
  $jurusan = $_GET['jurusan'] ?? '';
 
-// Data Program Studi berdasarkan Jurusan
  $prodiData = [
     'Teknik Informatika' => [
         'Teknik Informatika',
@@ -40,10 +39,9 @@ header('Content-Type: application/json');
     ]
 ];
 
-// Kirimkan response
 if (isset($prodiData[$jurusan])) {
     echo json_encode($prodiData[$jurusan]);
 } else {
-    echo json_encode([]); // Kirim array kosong jika jurusan tidak ditemukan
+    echo json_encode([]);
 }
 ?>

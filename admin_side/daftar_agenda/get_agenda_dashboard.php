@@ -25,20 +25,16 @@ function get_connection() {
 }
 
  $conn = get_connection();
-
-// --- GET PARAMETERS ---
  $jurusanFilter = $_POST['filterJurusan'] ?? '';
  $statusFilter = $_POST['filterStatus'] ?? '';
  $tanggalFilter = $_POST['filterTanggal'] ?? '';
 
-// --- BUILD THE QUERY ---
- $sql = "SELECT id, judul_rapat, jurusan, tanggal, waktu, status 
-        FROM rapat WHERE 1=1";
+ $sql = "SELECT id, judul_rapat, jurusan, tanggal, waktu, status, lokasi, tipe_tempat 
+        FROM agendas WHERE 1=1";
 
  $params = [];
  $types = '';
 
-// Add WHERE clauses dynamically
 if (!empty($jurusanFilter)) {
     $sql .= " AND jurusan = ?";
     $params[] = &$jurusanFilter;
@@ -57,7 +53,6 @@ if (!empty($tanggalFilter)) {
     $types .= 's';
 }
 
-// Add ORDER BY clause untuk mengurutkan rapat
  $sql .= " ORDER BY 
         CASE 
             WHEN status = 'akan datang' THEN 1
@@ -67,11 +62,8 @@ if (!empty($tanggalFilter)) {
         END, 
         tanggal ASC, waktu ASC";
 
-// --- PREPARE AND EXECUTE ---
  $stmt = $conn->prepare($sql);
 
-// *** PERBAIKAN UTAMA ADA DI SINI ***
-// Hanya jalankan bind_param jika ada parameter yang akan di-bind
 if (!empty($params)) {
     $stmt->bind_param($types, ...$params);
 }
@@ -88,8 +80,6 @@ while ($row = $result->fetch_assoc()) {
     $allAgendas[] = $row;
 }
 
-// --- CLOSE CONNECTION ---
  $conn->close();
 
-// --- SEND JSON RESPONSE ---
-send_json_response(true, 'Data retrieved successfully.', $allAgendas);  
+send_json_response(true, 'Data retrieved successfully.', $allAgendas);
