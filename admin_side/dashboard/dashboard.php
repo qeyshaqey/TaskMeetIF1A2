@@ -114,8 +114,8 @@ if (!is_logged_in()) {
             transition: margin-left .28s ease;
         }
         
-        .sidebar.hide+.content {
-            margin-left: 0;
+        .sidebar.hide ~ .content {
+            margin-left: 0 !important;
         }
         
         .overlay {
@@ -208,7 +208,7 @@ if (!is_logged_in()) {
             <a class="nav-link" href="../../autentikasi/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
         </nav>
     </aside>    
-    <div class="overlay" id="overlay"></div>
+    <!-- <div class="overlay" id="overlay"></div> -->
     <main class="content">
         <div class="container-fluid">
             <h4 class="mb-3 fw-semibold">Selamat Datang, <?php echo $_SESSION['full_name']; ?></h4>
