@@ -121,8 +121,8 @@
                 transition: margin-left .28s ease;
             }
 
-            .sidebar.hide+.content {
-                margin-left: 0;
+            .sidebar.hide~.content {
+                margin-left: 0 !important;
             }
 
             .table thead th {
@@ -160,31 +160,36 @@
                     padding-top: 100px;
                 }
 
-                .sidebar.show ~ .content {
+                .sidebar.show~.content {
                     margin-left: 260px;
                 }
 
                 .table-responsive {
                     overflow-x: auto;
-                    -webkit-overflow-scrolling: touch; 
+                    -webkit-overflow-scrolling: touch;
                 }
 
                 #agendaTable {
-                    min-width: 800px;
+                    min-width: 100%;
                 }
+
+                #agendaTable_wrapper {
+                    width: 100%;
+                    overflow-x: auto;
+                }
+
             }
 
             @media (max-width: 768px) {
                 #agendaTable {
                     font-size: 0.85rem;
                 }
-                
+
                 #agendaTable th,
                 #agendaTable td {
-                    white-space: nowrap;
                     padding: 8px 4px;
                 }
-                
+
                 .btn-sm {
                     font-size: 0.75rem;
                     padding: 4px 8px;
@@ -260,6 +265,7 @@
                     transform: translateY(-50px);
                     opacity: 0;
                 }
+
                 to {
                     transform: translateY(0);
                     opacity: 1;
@@ -290,7 +296,7 @@
     </head>
 
     <body>
-    <div class="toast-container" id="toastContainer"></div>
+        <div class="toast-container" id="toastContainer"></div>
         <!-- NAVBAR -->
         <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="container-fluid d-flex align-items-center">
@@ -313,8 +319,8 @@
                 <a class="nav-link" href="../daftar_peserta/peserta.php"><i class="fas fa-box"></i> Daftar Peserta</a>
                 <a class="nav-link active" href="daftarAgenda_admin.php"><i class="fas fa-users"></i> Daftar Agenda Rapat</a>
                 <div class="position-absolute bottom-0 w-100">
-                <hr>
-                <a class="nav-link" href="../../autentikasi/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
+                    <hr>
+                    <a class="nav-link" href="../../autentikasi/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
             </nav>
         </aside>
         <!-- MAIN CONTENT -->
@@ -339,6 +345,7 @@
                 <div class="card p-3 shadow-sm">
                     <div class="table-responsive">
                         <table id="agendaTable" class="table table-bordered table-striped align-middle">
+
                             <thead class="table-light text-center">
                                 <tr style="vertical-align: middle;">
                                     <th style="width:50px;">No</th>
@@ -449,29 +456,29 @@
         </div>
         <!-- MODAL DETAIL -->
         <div class="modal fade" id="modalDetail" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title">Detail Agenda Rapat</h5>
-                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title">Detail Agenda Rapat</h5>
+                        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Judul Rapat:</strong> <span id="detailJudul"></span></p>
+                        <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
+                        <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
+                        <p><strong>Waktu:</strong> <span id="detailWaktu"></span></p>
+                        <p><strong>Tempat / Platform:</strong> <span id="detailTempat"></span></p>
+                        <p><strong>Host:</strong> <span id="detailHost"></span></p>
+                        <hr>
+                        <h6 class="fw-semibold">Peserta:</h6>
+                        <ul id="detailPesertaList" class="list-group mb-3"></ul>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button class="btn btn-warning" id="btnEditDetail"><i class="fa fa-pen me-1"></i> Edit</button>
+                        <button class="btn btn-danger" id="btnHapusDetail"><i class="fa fa-trash me-1"></i> Hapus</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <p><strong>Judul Rapat:</strong> <span id="detailJudul"></span></p>
-                <p><strong>Jurusan:</strong> <span id="detailJurusan"></span></p>
-                <p><strong>Tanggal:</strong> <span id="detailTanggal"></span></p>
-                <p><strong>Waktu:</strong> <span id="detailWaktu"></span></p>
-                <p><strong>Tempat / Platform:</strong> <span id="detailTempat"></span></p>
-                <p><strong>Host:</strong> <span id="detailHost"></span></p>
-                <hr>
-                <h6 class="fw-semibold">Peserta:</h6>
-                <ul id="detailPesertaList" class="list-group mb-3"></ul>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button class="btn btn-warning" id="btnEditDetail"><i class="fa fa-pen me-1"></i> Edit</button>
-                <button class="btn btn-danger" id="btnHapusDetail"><i class="fa fa-trash me-1"></i> Hapus</button>
-            </div>
-            </div>
-        </div>
         </div>
         <!-- MODAL KONFIRMASI KUSTOM -->
         <div class="modal fade modal-confirm" id="modalConfirm" tabindex="-1">
@@ -492,116 +499,122 @@
                 </div>
             </div>
         </div>
-            <!-- MODAL EDIT -->
-            <div class="modal fade" id="modalEdit" tabindex="-1">
+        <!-- MODAL EDIT -->
+        <div class="modal fade" id="modalEdit" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                <div class="modal-header bg-warning text-white">
-                    <h5 class="modal-title">Edit Agenda Rapat</h5>
-                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formEdit">
-                    <div class="mb-3">
-                        <label class="form-label">Judul Rapat</label>
-                        <input type="text" class="form-control" id="editJudul">
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title">Edit Agenda Rapat</h5>
+                        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Jurusan</label>
-                            <select class="form-select" id="editJurusan">
-                                <option value="">Pilih Jurusan</option>
-                                <option>Teknik Informatika</option>
-                                <option>Teknik Mesin</option>
-                                <option>Teknik Elektro</option>
-                                <option>Manajemen Bisnis</option>
-                            </select>
+                    <div class="modal-body">
+                        <form id="formEdit">
+                            <div class="mb-3">
+                                <label class="form-label">Judul Rapat</label>
+                                <input type="text" class="form-control" id="editJudul">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Jurusan</label>
+                                <select class="form-select" id="editJurusan">
+                                    <option value="">Pilih Jurusan</option>
+                                    <option>Teknik Informatika</option>
+                                    <option>Teknik Mesin</option>
+                                    <option>Teknik Elektro</option>
+                                    <option>Manajemen Bisnis</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tanggal</label>
+                                <input type="date" class="form-control" id="editTanggal">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Waktu</label>
+                                <input type="time" class="form-control" id="editWaktu">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tempat / Platform</label>
+                                <input type="text" class="form-control" id="editTempat">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Host</label>
+                                <input type="text" class="form-control" id="editHost">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Peserta & Kehadiran</label>
+                                <ul id="editPesertaList" class="list-group"></ul>
+                            </div>
+                        </form>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tanggal</label>
-                        <input type="date" class="form-control" id="editTanggal">
+                    <div class="modal-footer justify-content-end">
+                        <button class="btn btn-success" id="btnSimpanEdit"><i class="fa fa-save me-1"></i> Simpan</button>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Waktu</label>
-                        <input type="time" class="form-control" id="editWaktu">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tempat / Platform</label>
-                        <input type="text" class="form-control" id="editTempat">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Host</label>
-                        <input type="text" class="form-control" id="editHost">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Peserta & Kehadiran</label>
-                        <ul id="editPesertaList" class="list-group"></ul>
-                    </div>
-                    </form>
-                </div>
-                <div class="modal-footer justify-content-end">
-                    <button class="btn btn-success" id="btnSimpanEdit"><i class="fa fa-save me-1"></i> Simpan</button>
-                </div>
                 </div>
             </div>
-            </div>
-    <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        </div>
+        <!-- JS -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- DataTables -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+        <!-- DataTables -->
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 
-    <script>
-    $(document).ready(function () {
-        console.log("Document siap. Memulai inisialisasi...");
+        <script>
+            $(document).ready(function() {
+                console.log("Document siap. Memulai inisialisasi...");
 
-        // === SIDEBAR TOGGLE ===
-        const sidebar = document.getElementById('sidebar');
-        const btnToggle = document.getElementById('btnToggleFloating');
-        if (btnToggle) {
-            btnToggle.addEventListener('click', () => {
-                if (window.innerWidth < 992) {
-                    sidebar.classList.toggle('show');
-                    overlay.classList.toggle('show');
-                } else {
-                    sidebar.classList.toggle('hide');
+                // === SIDEBAR TOGGLE ===
+                const sidebar = document.getElementById('sidebar');
+                const btnToggle = document.getElementById('btnToggleFloating');
+                if (btnToggle) {
+                    btnToggle.addEventListener('click', () => {
+                        if (window.innerWidth < 992) {
+                            sidebar.classList.toggle('show');
+                            overlay.classList.toggle('show');
+                        } else {
+                            sidebar.classList.toggle('hide');
+                        }
+
+                        sidebar.addEventListener('transitionend', () => {
+                            table.columns.adjust().draw();
+                        });
+                    });
+
+
+                    overlay.addEventListener('click', () => {
+                        sidebar.classList.remove('show');
+                        overlay.classList.remove('show');
+                    });
                 }
-            });
 
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
-            });
-        }
-        function showToast(message, type = 'info', title = '') {
-            const toastContainer = document.getElementById('toastContainer');
-            
-            let icon = '';
-            switch(type) {
-                case 'success':
-                    icon = '<i class="fas fa-check-circle text-success me-2"></i>';
-                    break;
-                case 'error':
-                    icon = '<i class="fas fa-exclamation-circle text-danger me-2"></i>';
-                    break;
-                case 'warning':
-                    icon = '<i class="fas fa-exclamation-triangle text-warning me-2"></i>';
-                    break;
-                default:
-                    icon = '<i class="fas fa-info-circle text-info me-2"></i>';
-            }
-            
-            const toastId = 'toast-' + Date.now();
-            const toastHTML = `
+                function showToast(message, type = 'info', title = '') {
+                    const toastContainer = document.getElementById('toastContainer');
+
+                    let icon = '';
+                    switch (type) {
+                        case 'success':
+                            icon = '<i class="fas fa-check-circle text-success me-2"></i>';
+                            break;
+                        case 'error':
+                            icon = '<i class="fas fa-exclamation-circle text-danger me-2"></i>';
+                            break;
+                        case 'warning':
+                            icon = '<i class="fas fa-exclamation-triangle text-warning me-2"></i>';
+                            break;
+                        default:
+                            icon = '<i class="fas fa-info-circle text-info me-2"></i>';
+                    }
+
+                    const toastId = 'toast-' + Date.now();
+                    const toastHTML = `
                 <div id="${toastId}" class="toast ${type}" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
                         ${icon}
@@ -615,327 +628,391 @@
                     </div>
                 </div>
             `;
-            
-            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-            
-            const toastElement = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastElement, {
-                autohide: true,
-                delay: 5000
-            });
-            
-            toast.show();
-            
-            toastElement.addEventListener('hidden.bs.toast', function () {
-                toastElement.remove();
-            });
-        }
-        // === FUNGSI UNTUK MEMUAT PESERTA ===
-        function loadPeserta(jurusan) {
-            console.log("Memuat peserta untuk jurusan:", jurusan);
-            $.ajax({
-                url: 'get_peserta_by_jurusan.php',
-                type: 'GET',
-                data: { jurusan: jurusan },
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Berhasil memuat peserta:", response);
-                    let pesertaHTML = '';
-                    if (response.length === 0) {
-                        pesertaHTML = '<p class="text-center py-3">Tidak ada peserta untuk jurusan ini</p>';
-                    } else {
-                        response.forEach(function(peserta) {
-                            pesertaHTML += `
+
+                    toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+
+                    const toastElement = document.getElementById(toastId);
+                    const toast = new bootstrap.Toast(toastElement, {
+                        autohide: true,
+                        delay: 5000
+                    });
+
+                    toast.show();
+
+                    toastElement.addEventListener('hidden.bs.toast', function() {
+                        toastElement.remove();
+                    });
+                }
+                // === FUNGSI UNTUK MEMUAT PESERTA ===
+                function loadPeserta(jurusan) {
+                    console.log("Memuat peserta untuk jurusan:", jurusan);
+                    $.ajax({
+                        url: 'get_peserta_by_jurusan.php',
+                        type: 'GET',
+                        data: {
+                            jurusan: jurusan
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Berhasil memuat peserta:", response);
+                            let pesertaHTML = '';
+                            if (response.length === 0) {
+                                pesertaHTML = '<p class="text-center py-3">Tidak ada peserta untuk jurusan ini</p>';
+                            } else {
+                                response.forEach(function(peserta) {
+                                    pesertaHTML += `
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input peserta-checkbox" id="peserta${peserta.id}" value="${peserta.nama}" data-id="${peserta.id}">
                                     <label class="form-check-label" for="peserta${peserta.id}">${peserta.nama}</label>
                                 </div>
                             `;
-                        });
-                    }
-                    $('#pesertaList').html(pesertaHTML);
-                    $('#selectAllPeserta').prop('checked', false);
-                },
-                error: function(xhr, status, error) {
-                    console.error("Gagal memuat peserta:", error);
-                    $('#pesertaList').html('<p class="text-danger text-center py-3">Gagal memuat data peserta. Cek console.</p>');
-                }
-            });
-        }
-        // === EVENT LISTENER MODAL & FORM ===
-        $('#modalTambah').on('show.bs.modal', function () {
-            loadPeserta($('#jurusanInput').val());
-        });
-
-        $('#jurusanInput').on('change', function () {
-            loadPeserta($(this).val());
-        });
-
-        $(document).on('change', '#selectAllPeserta', function () {
-            const checked = $(this).is(':checked');
-            $('.peserta-checkbox').prop('checked', checked);
-        });
-
-        $(document).on('change', '.peserta-checkbox', function () {
-            const total = $('.peserta-checkbox').length;
-            const checked = $('.peserta-checkbox:checked').length;
-            $('#selectAllPeserta').prop('checked', total === checked && total > 0);
-        });
-
-        $('input[name="tipeTempat"]').on('change', function() {
-            if ($(this).val() === 'offline') {
-                $('#tempatOfflineInput').removeClass('d-none');
-                $('#zoomLinkInput').addClass('d-none').val('');
-            } else {
-                $('#tempatOfflineInput').addClass('d-none').val('');
-                $('#zoomLinkInput').removeClass('d-none');
-            }
-        });
-        // === DATATABLES ===
-        const table = $('#agendaTable').DataTable({
-            processing: true,
-            serverSide: true,
-            pageLength: 5,
-            dom: 'Bfrtip',
-            buttons: [
-                { extend: 'copy', text: 'Salin' },
-                { extend: 'excel', text: 'Excel' },
-                { extend: 'pdf', text: 'PDF' },
-                { extend: 'print', text: 'Cetak' },
-                { extend: 'colvis', text: 'Pilih Kolom' }
-            ],
-            order: [[1, 'asc']],
-            language: {
-                "sProcessing": "Sedang memproses...",
-                "sLengthMenu": "Tampilkan _MENU_ entri",
-                "sZeroRecords": "Tidak ditemukan data yang cocok",
-                "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
-                "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
-                "sInfoPostFix": "",
-                "sSearch": "Cari:",
-                "sUrl": "",
-                "oPaginate": {
-                    "sFirst": "Pertama",
-                    "sPrevious": "Sebelumnya",
-                    "sNext": "Selanjutnya",
-                    "sLast": "Terakhir"
-                },
-                "buttons": {
-                    "copy": "Salin",
-                    "copyTitle": "Salin ke clipboard",
-                    "copySuccess": {
-                        "_": "Salin %d baris",
-                        "1": "Salin 1 baris"
-                    },
-                    "excel": "Excel",
-                    "pdf": "PDF",
-                    "print": "Cetak",
-                    "colvis": "Pilih Kolom"
-                }
-            },
-            ajax: {
-                url: 'get_agenda.php',
-                type: 'POST',
-                data: function (d) {
-                    d.filterJurusan = $('#filterJenis').val();
-                }
-            },
-            columns: [
-                { data: null, orderable: false, className: 'text-center', render: function (data, type, row, meta) { return meta.row + meta.settings._iDisplayStart + 1; }},
-                { data: 'judul_rapat' },
-                { data: 'jurusan' },
-                { data: 'tanggal' },
-                { data: 'waktu' },
-                { 
-                    data: 'tempat',
-                    render: function(data, type, row) {
-                        if (row.tipe_tempat === 'online') {
-                            return `<a href="${data}" target="_blank" class="text-primary text-decoration-none">Link Meeting</a>`;
-                        } else {
-                            return data;
+                                });
+                            }
+                            $('#pesertaList').html(pesertaHTML);
+                            $('#selectAllPeserta').prop('checked', false);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Gagal memuat peserta:", error);
+                            $('#pesertaList').html('<p class="text-danger text-center py-3">Gagal memuat data peserta. Cek console.</p>');
                         }
-                    }
-                },
-                { data: 'host' },
-                { data: 'peserta' },
-                { data: null, orderable: false, className: 'text-center', render: function (data, type, row) { return `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail" data-id="${row.id}">Detail</button>`; }}
-            ]
-        });
-
-        $('#filterJenis').on('change', function () {
-            table.ajax.reload();
-        });
-
-        // === CRUD OPERATIONS ===
-        // --- TAMBAH DATA ---
-        $('#formTambah').on('submit', function (e) {
-            e.preventDefault();
-            const pesertaTerpilih = [];
-            $('.peserta-checkbox:checked').each(function() {
-                pesertaTerpilih.push($(this).data('id'));
-            });
-            const formData = {
-                action: 'tambah',
-                judul_rapat: $('#judulRapatInput').val(),
-                jurusan: $('#jurusanInput').val(),
-                tanggal: $('#tanggalInput').val(),
-                waktu: $('#waktuInput').val(),
-                host: $('#hostInput').val(),
-                tipe_tempat: $('input[name="tipeTempat"]:checked').val(),
-                peserta_ids: pesertaTerpilih
-            };
-            if (formData.tipe_tempat === 'online') {
-                formData.zoom_link = $('#zoomLinkInput').val();
-            } else {
-                formData.tempat_offline = $('#tempatOfflineInput').val();
-            }
-            $.ajax({
-                url: 'crud_agenda.php',
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Response dari server (tambah):", response);
-                    if (response.success) {
-                        $('#modalTambah').modal('hide');
-                        $('#formTambah')[0].reset();
-                        table.ajax.reload();
-                        showToast(response.message, 'success', 'Berhasil');
-                    } else {
-                        showToast('Error: ' + response.message, 'error', 'Kesalahan');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Gagal menambah agenda:", error);
-                    showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                    });
                 }
-            });
-        });
-        // --- DETAIL ---
-        $('#agendaTable tbody').on('click', '.btn-detail', function () {
-            const id = $(this).data('id');
-            console.log("Mengambil detail untuk ID:", id);
-            $.ajax({
-                url: 'crud_agenda.php',
-                type: 'GET',
-                data: { action: 'detail', id: id },
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Response dari server (detail):", response);
-                    if (response.success) {
-                        const data = response.data;
-                        $('#detailJudul').text(data.judul_rapat);
-                        $('#detailJurusan').text(data.jurusan);
-                        $('#detailTanggal').text(data.tanggal);
-                        $('#detailWaktu').text(data.waktu);
-                        $('#detailTempat').html(data.tipe_tempat === 'online' ? `<a href="${data.lokasi}" target="_blank">Link Meeting</a>` : data.lokasi);
-                        $('#detailHost').text(data.host);
-                        let pesertaHTML = '';
-                        data.peserta_detail.forEach(p => { pesertaHTML += `<li class="list-group-item">${p.nama_peserta}</li>`; });
-                        $('#detailPesertaList').html(pesertaHTML);
-                        $('#modalDetail').data('agenda-id', id).data('agenda-data', data).modal('show');
-                    } else {
-                        showToast('Error: ' + response.message, 'error', 'Kesalahan');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Gagal mengambil detail:", error);
-                    showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
-                }
-            });
-        });
-        // --- FUNGSI UNTUK MENAMPILKAN MODAL KONFIRMASI KUSTOM ---
-    function showConfirmModal(message, onConfirm) {
-        $('#confirmMessage').text(message);
-        $('#btnConfirmYes').off('click').on('click', function() {
-            $('#modalConfirm').modal('hide');
-            if (typeof onConfirm === 'function') {
-                onConfirm();
-            }
-        });
-        new bootstrap.Modal(document.getElementById('modalConfirm')).show();
-    }
-        // --- HAPUS ---
-        $('#btnHapusDetail').on('click', function () {
-            const agendaId = $('#modalDetail').data('agenda-id');
-            if (!agendaId) return;
+                // === EVENT LISTENER MODAL & FORM ===
+                $('#modalTambah').on('show.bs.modal', function() {
+                    loadPeserta($('#jurusanInput').val());
+                });
 
-            showConfirmModal('Apakah Anda yakin ingin menghapus agenda ini?', function() {
-                $.ajax({
-                    url: 'crud_agenda.php',
-                    type: 'POST',
-                    data: { action: 'hapus', id: agendaId },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            $('#modalDetail').modal('hide');
-                            table.ajax.reload();
-                            showToast(response.message, 'success', 'Berhasil');
-                        } else {
-                            showToast('Error: ' + response.message, 'error', 'Kesalahan');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Gagal menghapus:", error);
-                        showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                $('#jurusanInput').on('change', function() {
+                    loadPeserta($(this).val());
+                });
+
+                $(document).on('change', '#selectAllPeserta', function() {
+                    const checked = $(this).is(':checked');
+                    $('.peserta-checkbox').prop('checked', checked);
+                });
+
+                $(document).on('change', '.peserta-checkbox', function() {
+                    const total = $('.peserta-checkbox').length;
+                    const checked = $('.peserta-checkbox:checked').length;
+                    $('#selectAllPeserta').prop('checked', total === checked && total > 0);
+                });
+
+                $('input[name="tipeTempat"]').on('change', function() {
+                    if ($(this).val() === 'offline') {
+                        $('#tempatOfflineInput').removeClass('d-none');
+                        $('#zoomLinkInput').addClass('d-none').val('');
+                    } else {
+                        $('#tempatOfflineInput').addClass('d-none').val('');
+                        $('#zoomLinkInput').removeClass('d-none');
                     }
                 });
-            });
-        });
-        // --- EDIT ---
-        $('#btnEditDetail').on('click', function () {
-            const data = $('#modalDetail').data('agenda-data');
-            $('#editJudul').val(data.judul_rapat);
-            $('#editJurusan').val(data.jurusan);
-            $('#editTanggal').val(data.tanggal);
-            $('#editWaktu').val(data.waktu);
-            $('#editHost').val(data.host);
-            $('#editTempat').val(data.lokasi);
-            let pesertaHTML = '';
-            data.peserta_detail.forEach(p => {
-                const nama = p.nama_peserta;
-                const status = p.status_kehadiran;
-                pesertaHTML += `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${nama}</span><div><label><input type="radio" name="status_${nama}" value="hadir" ${status === 'hadir' ? 'checked' : ''}> Hadir</label><label><input type="radio" name="status_${nama}" value="tidak_hadir" ${status === 'tidak_hadir' ? 'checked' : ''}> Tidak Hadir</label></div></li>`;
-            });
-            $('#editPesertaList').html(pesertaHTML);
-            $('#modalEdit').data('agenda-id', data.id);
-            $('#modalDetail').modal('hide');
-            $('#modalEdit').modal('show');
-        });
-        // --- SIMPAN EDIT ---
-        $('#btnSimpanEdit').on('click', function () {
-            const agendaId = $('#modalEdit').data('agenda-id');
-            if (!agendaId) return;
-            const pesertaStatus = {};
-            $('#editPesertaList li').each(function() {
-                const nama = $(this).find('span').text();
-                const status = $(this).find('input[type="radio"]:checked').val();
-                if (status) pesertaStatus[nama] = status;
-            });
-            const formData = { action: 'edit', id: agendaId, judul_rapat: $('#editJudul').val(), jurusan: $('#editJurusan').val(), tanggal: $('#editTanggal').val(), waktu: $('#editWaktu').val(), host: $('#editHost').val(), tempat: $('#editTempat').val(), peserta_status: JSON.stringify(pesertaStatus) };
-            $.ajax({
-                url: 'crud_agenda.php',
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(response) {
-                    console.log("Response dari server (edit):", response);
-                    if (response.success) {
-                        $('#modalEdit').modal('hide');
-                        table.ajax.reload();
-                        showToast(response.message, 'success', 'Berhasil');
+                // === DATATABLES ===
+                const table = $('#agendaTable').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    scrollX: true,
+                    pageLength: 5,
+                    dom: 'Bfrtip',
+                    buttons: [{
+                            extend: 'copy',
+                            text: 'Salin'
+                        },
+                        {
+                            extend: 'excel',
+                            text: 'Excel'
+                        },
+                        {
+                            extend: 'pdf',
+                            text: 'PDF'
+                        },
+                        {
+                            extend: 'print',
+                            text: 'Cetak'
+                        },
+                        {
+                            extend: 'colvis',
+                            text: 'Pilih Kolom'
+                        }
+                    ],
+                    order: [
+                        [1, 'asc']
+                    ],
+                    language: {
+                        "sProcessing": "Sedang memproses...",
+                        "sLengthMenu": "Tampilkan _MENU_ entri",
+                        "sZeroRecords": "Tidak ditemukan data yang cocok",
+                        "sInfo": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        "sInfoEmpty": "Menampilkan 0 sampai 0 dari 0 entri",
+                        "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
+                        "sInfoPostFix": "",
+                        "sSearch": "Cari:",
+                        "sUrl": "",
+                        "oPaginate": {
+                            "sFirst": "Pertama",
+                            "sPrevious": "Sebelumnya",
+                            "sNext": "Selanjutnya",
+                            "sLast": "Terakhir"
+                        },
+                        "buttons": {
+                            "copy": "Salin",
+                            "copyTitle": "Salin ke clipboard",
+                            "copySuccess": {
+                                "_": "Salin %d baris",
+                                "1": "Salin 1 baris"
+                            },
+                            "excel": "Excel",
+                            "pdf": "PDF",
+                            "print": "Cetak",
+                            "colvis": "Pilih Kolom"
+                        }
+                    },
+                    ajax: {
+                        url: 'get_agenda.php',
+                        type: 'POST',
+                        data: function(d) {
+                            d.filterJurusan = $('#filterJenis').val();
+                        }
+                    },
+                    columns: [{
+                            data: null,
+                            orderable: false,
+                            className: 'text-center',
+                            render: function(data, type, row, meta) {
+                                return meta.row + meta.settings._iDisplayStart + 1;
+                            }
+                        },
+                        {
+                            data: 'judul_rapat'
+                        },
+                        {
+                            data: 'jurusan'
+                        },
+                        {
+                            data: 'tanggal'
+                        },
+                        {
+                            data: 'waktu'
+                        },
+                        {
+                            data: 'tempat',
+                            render: function(data, type, row) {
+                                if (row.tipe_tempat === 'online') {
+                                    return `<a href="${data}" target="_blank" class="text-primary text-decoration-none">Link Meeting</a>`;
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {
+                            data: 'host'
+                        },
+                        {
+                            data: 'peserta'
+                        },
+                        {
+                            data: null,
+                            orderable: false,
+                            className: 'text-center',
+                            render: function(data, type, row) {
+                                return `<button class="btn btn-primary btn-sm text-white fw-semibold btn-detail" data-id="${row.id}">Detail</button>`;
+                            }
+                        }
+                    ]
+                });
+
+                $('#filterJenis').on('change', function() {
+                    table.ajax.reload();
+                });
+
+                // === CRUD OPERATIONS ===
+                // --- TAMBAH DATA ---
+                $('#formTambah').on('submit', function(e) {
+                    e.preventDefault();
+                    const pesertaTerpilih = [];
+                    $('.peserta-checkbox:checked').each(function() {
+                        pesertaTerpilih.push($(this).data('id'));
+                    });
+                    const formData = {
+                        action: 'tambah',
+                        judul_rapat: $('#judulRapatInput').val(),
+                        jurusan: $('#jurusanInput').val(),
+                        tanggal: $('#tanggalInput').val(),
+                        waktu: $('#waktuInput').val(),
+                        host: $('#hostInput').val(),
+                        tipe_tempat: $('input[name="tipeTempat"]:checked').val(),
+                        peserta_ids: pesertaTerpilih
+                    };
+                    if (formData.tipe_tempat === 'online') {
+                        formData.zoom_link = $('#zoomLinkInput').val();
                     } else {
-                        showToast('Error: ' + response.message, 'error', 'Kesalahan');
+                        formData.tempat_offline = $('#tempatOfflineInput').val();
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Gagal menyimpan edit:", error);
-                    showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                    $.ajax({
+                        url: 'crud_agenda.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Response dari server (tambah):", response);
+                            if (response.success) {
+                                $('#modalTambah').modal('hide');
+                                $('#formTambah')[0].reset();
+                                table.ajax.reload();
+                                showToast(response.message, 'success', 'Berhasil');
+                            } else {
+                                showToast('Error: ' + response.message, 'error', 'Kesalahan');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Gagal menambah agenda:", error);
+                            showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                        }
+                    });
+                });
+                // --- DETAIL ---
+                $('#agendaTable tbody').on('click', '.btn-detail', function() {
+                    const id = $(this).data('id');
+                    console.log("Mengambil detail untuk ID:", id);
+                    $.ajax({
+                        url: 'crud_agenda.php',
+                        type: 'GET',
+                        data: {
+                            action: 'detail',
+                            id: id
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Response dari server (detail):", response);
+                            if (response.success) {
+                                const data = response.data;
+                                $('#detailJudul').text(data.judul_rapat);
+                                $('#detailJurusan').text(data.jurusan);
+                                $('#detailTanggal').text(data.tanggal);
+                                $('#detailWaktu').text(data.waktu);
+                                $('#detailTempat').html(data.tipe_tempat === 'online' ? `<a href="${data.lokasi}" target="_blank">Link Meeting</a>` : data.lokasi);
+                                $('#detailHost').text(data.host);
+                                let pesertaHTML = '';
+                                data.peserta_detail.forEach(p => {
+                                    pesertaHTML += `<li class="list-group-item">${p.nama_peserta}</li>`;
+                                });
+                                $('#detailPesertaList').html(pesertaHTML);
+                                $('#modalDetail').data('agenda-id', id).data('agenda-data', data).modal('show');
+                            } else {
+                                showToast('Error: ' + response.message, 'error', 'Kesalahan');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Gagal mengambil detail:", error);
+                            showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                        }
+                    });
+                });
+                // --- FUNGSI UNTUK MENAMPILKAN MODAL KONFIRMASI KUSTOM ---
+                function showConfirmModal(message, onConfirm) {
+                    $('#confirmMessage').text(message);
+                    $('#btnConfirmYes').off('click').on('click', function() {
+                        $('#modalConfirm').modal('hide');
+                        if (typeof onConfirm === 'function') {
+                            onConfirm();
+                        }
+                    });
+                    new bootstrap.Modal(document.getElementById('modalConfirm')).show();
                 }
+                // --- HAPUS ---
+                $('#btnHapusDetail').on('click', function() {
+                    const agendaId = $('#modalDetail').data('agenda-id');
+                    if (!agendaId) return;
+
+                    showConfirmModal('Apakah Anda yakin ingin menghapus agenda ini?', function() {
+                        $.ajax({
+                            url: 'crud_agenda.php',
+                            type: 'POST',
+                            data: {
+                                action: 'hapus',
+                                id: agendaId
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.success) {
+                                    $('#modalDetail').modal('hide');
+                                    table.ajax.reload();
+                                    showToast(response.message, 'success', 'Berhasil');
+                                } else {
+                                    showToast('Error: ' + response.message, 'error', 'Kesalahan');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Gagal menghapus:", error);
+                                showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                            }
+                        });
+                    });
+                });
+                // --- EDIT ---
+                $('#btnEditDetail').on('click', function() {
+                    const data = $('#modalDetail').data('agenda-data');
+                    $('#editJudul').val(data.judul_rapat);
+                    $('#editJurusan').val(data.jurusan);
+                    $('#editTanggal').val(data.tanggal);
+                    $('#editWaktu').val(data.waktu);
+                    $('#editHost').val(data.host);
+                    $('#editTempat').val(data.lokasi);
+                    let pesertaHTML = '';
+                    data.peserta_detail.forEach(p => {
+                        const nama = p.nama_peserta;
+                        const status = p.status_kehadiran;
+                        pesertaHTML += `<li class="list-group-item d-flex justify-content-between align-items-center"><span>${nama}</span><div><label><input type="radio" name="status_${nama}" value="hadir" ${status === 'hadir' ? 'checked' : ''}> Hadir</label><label><input type="radio" name="status_${nama}" value="tidak_hadir" ${status === 'tidak_hadir' ? 'checked' : ''}> Tidak Hadir</label></div></li>`;
+                    });
+                    $('#editPesertaList').html(pesertaHTML);
+                    $('#modalEdit').data('agenda-id', data.id);
+                    $('#modalDetail').modal('hide');
+                    $('#modalEdit').modal('show');
+                });
+                // --- SIMPAN EDIT ---
+                $('#btnSimpanEdit').on('click', function() {
+                    const agendaId = $('#modalEdit').data('agenda-id');
+                    if (!agendaId) return;
+                    const pesertaStatus = {};
+                    $('#editPesertaList li').each(function() {
+                        const nama = $(this).find('span').text();
+                        const status = $(this).find('input[type="radio"]:checked').val();
+                        if (status) pesertaStatus[nama] = status;
+                    });
+                    const formData = {
+                        action: 'edit',
+                        id: agendaId,
+                        judul_rapat: $('#editJudul').val(),
+                        jurusan: $('#editJurusan').val(),
+                        tanggal: $('#editTanggal').val(),
+                        waktu: $('#editWaktu').val(),
+                        host: $('#editHost').val(),
+                        tempat: $('#editTempat').val(),
+                        peserta_status: JSON.stringify(pesertaStatus)
+                    };
+                    $.ajax({
+                        url: 'crud_agenda.php',
+                        type: 'POST',
+                        data: formData,
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log("Response dari server (edit):", response);
+                            if (response.success) {
+                                $('#modalEdit').modal('hide');
+                                table.ajax.reload();
+                                showToast(response.message, 'success', 'Berhasil');
+                            } else {
+                                showToast('Error: ' + response.message, 'error', 'Kesalahan');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Gagal menyimpan edit:", error);
+                            showToast('Terjadi kesalahan saat menghubungi server. Cek console untuk detail.', 'error', 'Kesalahan');
+                        }
+                    });
+                });
             });
-        });
-    });
-    </script>
+        </script>
     </body>
+
     </html>
