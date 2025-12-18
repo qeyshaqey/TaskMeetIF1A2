@@ -117,6 +117,10 @@ if (!is_logged_in()) {
         .sidebar.hide ~ .content {
             margin-left: 0 !important;
         }
+
+        .table thead th {
+            background: #e9eef7;
+        }
         
         .overlay {
             display: none;
@@ -155,6 +159,7 @@ if (!is_logged_in()) {
             
             .sidebar.show ~ .content {
                 margin-left: 260px;
+                margin-left: 0 !important;
             }
             
             .table-responsive {
@@ -239,7 +244,7 @@ if (!is_logged_in()) {
             <div class="card p-3 shadow-sm">
                 <div class="table-responsive">
                     <table id="jadwalTable" class="table table-striped table-bordered">
-                        <thead>
+                        <thead class="table-light text-center">
                             <tr>
                                 <th>No</th>
                                 <th>Judul Rapat</th>
