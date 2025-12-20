@@ -7,48 +7,53 @@ if (!is_logged_in() || is_admin()) {
     redirect('../../autentikasi/login.php');
 }
 
-$user_id = $_SESSION['user_id'];
+if (!isset($_SESSION['login_notified'])) {
+    $_SESSION['show_login_notification'] = true;
+    $_SESSION['login_notified'] = true;
+}
 
-$sql = "SELECT a.id, a.judul_rapat, a.tanggal, a.waktu, a.lokasi, a.status
+ $user_id = $_SESSION['user_id'];
+
+ $sql = "SELECT a.id, a.judul_rapat, a.tanggal, a.waktu, a.lokasi, a.status
         FROM agendas a
         JOIN agenda_participants ap ON a.id = ap.agenda_id
         WHERE ap.user_id = ?
         AND a.status IN ('akan datang', 'berlangsung')
         ORDER BY a.tanggal ASC, a.waktu ASC";
-$stmt = $koneksi->prepare($sql);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$rapat_aktif = $stmt->get_result();
+ $stmt = $koneksi->prepare($sql);
+ $stmt->bind_param("i", $user_id);
+ $stmt->execute();
+ $rapat_aktif = $stmt->get_result();
 
-$sql1 = "SELECT COUNT(*)
+ $sql1 = "SELECT COUNT(*)
         FROM agendas a 
         JOIN agenda_participants ap ON a.id = ap.agenda_id
         WHERE ap.user_id = ?
         AND a.status = 'akan datang'";
-$stmt1 = $koneksi->prepare($sql1);
-$stmt1->bind_param("i", $user_id);
-$stmt1->execute();
-$total_upcoming = $stmt1->get_result()->fetch_row()[0];
+ $stmt1 = $koneksi->prepare($sql1);
+ $stmt1->bind_param("i", $user_id);
+ $stmt1->execute();
+ $total_upcoming = $stmt1->get_result()->fetch_row()[0];
 
-$sql2 = "SELECT COUNT(*)
+ $sql2 = "SELECT COUNT(*)
         FROM agendas a 
         JOIN agenda_participants ap ON a.id = ap.agenda_id
         WHERE ap.user_id = ?
         AND a.status = 'selesai'";
-$stmt2 = $koneksi->prepare($sql2);
-$stmt2->bind_param("i", $user_id);
-$stmt2->execute();
-$total_finished = $stmt2->get_result()->fetch_row()[0];
+ $stmt2 = $koneksi->prepare($sql2);
+ $stmt2->bind_param("i", $user_id);
+ $stmt2->execute();
+ $total_finished = $stmt2->get_result()->fetch_row()[0];
 
-$sql3 = "SELECT 
+ $sql3 = "SELECT 
             SUM(CASE WHEN ap.status_kehadiran='hadir' THEN 1 ELSE 0 END) AS hadir,
             SUM(CASE WHEN ap.status_kehadiran='tidak_hadir' THEN 1 ELSE 0 END) AS absen
         FROM agenda_participants ap
         WHERE ap.user_id = ?";
-$stmt3 = $koneksi->prepare($sql3);
-$stmt3->bind_param("i", $user_id);
-$stmt3->execute();
-$kehadiran = $stmt3->get_result()->fetch_assoc();
+ $stmt3 = $koneksi->prepare($sql3);
+ $stmt3->bind_param("i", $user_id);
+ $stmt3->execute();
+ $kehadiran = $stmt3->get_result()->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -128,6 +133,17 @@ $kehadiran = $stmt3->get_result()->fetch_assoc();
         border-radius: 6px;
         z-index: 1000;
       }
+    }
+    
+    .notification-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+    
+    .login-toast {
+      min-width: 300px;
     }
   </style>
 </head>
@@ -246,10 +262,31 @@ $kehadiran = $stmt3->get_result()->fetch_assoc();
     </div>
   </div>
 
+  <div class="notification-container">
+    <div class="toast login-toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="loginSuccessToast">
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="fas fa-check-circle me-2"></i>
+          Login berhasil! Selamat datang, <?php echo $_SESSION['full_name']; ?>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     document.getElementById('toggleBtn')?.addEventListener('click', () => {
       document.getElementById('sidebar').classList.toggle('active');
     });
+    
+    <?php if (isset($_SESSION['show_login_notification']) && $_SESSION['show_login_notification']): ?>
+      document.addEventListener('DOMContentLoaded', function() {
+        const loginToast = new bootstrap.Toast(document.getElementById('loginSuccessToast'));
+        loginToast.show();
+        <?php unset($_SESSION['show_login_notification']); ?>
+      });
+    <?php endif; ?>
     
     setTimeout(() => location.reload(), 30000);
   </script>

@@ -5,6 +5,10 @@ require_once '../../autentikasi/functions.php';
 if (!is_logged_in()) {
     redirect('../../autentikasi/login.php');
 }
+if (!isset($_SESSION['login_notified'])) {
+    $_SESSION['show_login_notification'] = true;
+    $_SESSION['login_notified'] = true;
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -187,6 +191,16 @@ if (!is_logged_in()) {
                 width: 100% !important;
             }
         }
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        .login-toast {
+            min-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -213,7 +227,6 @@ if (!is_logged_in()) {
             <a class="nav-link" href="../../autentikasi/logout.php"><i class="fas fa-sign-out-alt"></i> Keluar</a>
         </nav>
     </aside>    
-    <!-- <div class="overlay" id="overlay"></div> -->
     <main class="content">
         <div class="container-fluid">
             <h4 class="mb-3 fw-semibold">Selamat Datang, <?php echo $_SESSION['full_name']; ?></h4>
@@ -263,6 +276,17 @@ if (!is_logged_in()) {
             </div>
         </div>
     </main>
+    <div class="notification-container">
+        <div class="toast login-toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" id="loginSuccessToast">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Login berhasil! Selamat datang, <?php echo $_SESSION['full_name']; ?>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -272,6 +296,11 @@ if (!is_logged_in()) {
 
     <script>
     $(document).ready(function() {
+        <?php if (isset($_SESSION['show_login_notification']) && $_SESSION['show_login_notification']): ?>
+                const loginToast = new bootstrap.Toast(document.getElementById('loginSuccessToast'));
+                loginToast.show();
+                <?php unset($_SESSION['show_login_notification']); ?>
+        <?php endif; ?>
         const table = $('#jadwalTable').DataTable({
             pageLength: 10,
             lengthChange: false,
